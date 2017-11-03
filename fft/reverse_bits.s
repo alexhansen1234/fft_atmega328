@@ -7,4 +7,5 @@ reverse_bits:
   rol r16
   dec r22
   brne  shift_loop1
+  mov r24,  r16
   ret
