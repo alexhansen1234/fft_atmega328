@@ -42,14 +42,14 @@ cp    _zero_reg_, r24
 cpc   _zero_reg_, r25
 breq  return_zero
 
+cp    _zero_reg_, r22
+cpc   _zero_reg_, r23
+breq  return_zero
+
 ori   r25,  0x80
 cp    r25,  _temp_reg_
 cpc   r24,  _temp_reg_
 breq  return_inf
-
-cp    _zero_reg_, r22
-cpc   _zero_reg_, r23
-breq  return_zero
 
 ori   r23,  0x80
 cp    r22,  _temp_reg_

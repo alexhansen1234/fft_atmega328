@@ -24,9 +24,11 @@ void reset()
 
 int main()
 {
-  float a = 0.995184727;
-  float b = 0.09801714;
-
+//  float a = 0.995184727;
+//  float b = 0.09801714;
+  uint8_t z = 5;
+  uint8_t x = reverse_bits(z, 5);
+/*
   float16 e = convert_float_to_float16(&a);
   float16 f = convert_float_to_float16(&b);
   complex16 i = compose_complex(e, f);
@@ -36,7 +38,7 @@ int main()
   complex16 n = __complex_mul(m, m);
   complex16 o = __complex_mul(n, n);
   complex16 p = __complex_mul(o, o);
-
+*/
   while(1)
     continue;
 }
