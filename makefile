@@ -23,3 +23,6 @@ reverse_bits.o: ./fft/reverse_bits.s
 
 clean:
 		\rm *.o complex_demo.hex complex_demo.elf
+
+archive.tar:
+	tar -cf directory/*
