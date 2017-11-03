@@ -1,3 +1,9 @@
+_temp_reg_ = 0
+_zero_reg_ = 1
+SPL = 0x3d
+SPH = 0x3e
+SREG = 0x3f
+
 .global reverse_bits
 .text
 reverse_bits:
