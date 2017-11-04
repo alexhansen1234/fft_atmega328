@@ -61,7 +61,7 @@ int main()
 #endif
 
 #if 1
-    uint8_t array[256];
+    uint32_t array[256];
     int i;
     for(i=0; i < 256; i++)
     {
@@ -69,7 +69,7 @@ int main()
     }
 #endif
 
-    permute_input(array, 1, 256);
+    permute_input(array, 4, 256);
 
 
 /*
