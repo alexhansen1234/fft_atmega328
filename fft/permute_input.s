@@ -32,12 +32,6 @@ mov r24,  r20
 call  slog2
 std Y+8,  r25
 std Y+7,  r24
-ldd r25,  Y+2
-ldd r24,  Y+1
-lsr r25
-ror r24
-std Y+2,  r25
-std Y+1,  r24
 
 ldi r25,  0
 ldi r24,  1
