@@ -31,6 +31,16 @@ int main()
 //  uint8_t x = reverse_bits(z, 5);
 //  uint8_t y = reverse_bits(x, 5);
 
+#if 1
+    uint16_t array[16];
+    int i;
+    for(i=0; i < 16; i++)
+    {
+      array[i] = i | i<<4 | i<<8 | i<<12;
+    }
+#endif
+
+#if 0
     uint16_t array[16];
     array[0] = 0x0000;
     array[1] = 0x1111;
@@ -48,15 +58,19 @@ int main()
     array[13]= 0xDDDD;
     array[14]= 0xEEEE;
     array[15]= 0xFFFF;
+#endif
 
-/*
+#if 0
+    uint16_t array[256];
     int i;
-    for(i=0; i < 16; i++)
+    for(i=0; i < 256; i++)
     {
       array[i] = i;
     }
- */
+#endif
+
     permute_input(array, 2, 16);
+
 
 /*
   float16 e = convert_float_to_float16(&a);
