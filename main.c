@@ -31,35 +31,6 @@ int main()
 //  uint8_t x = reverse_bits(z, 5);
 //  uint8_t y = reverse_bits(x, 5);
 
-#if 0
-    uint16_t array[16];
-    int i;
-    for(i=0; i < 16; i++)
-    {
-      array[i] = i | i<<4 | i<<8 | i<<12;
-    }
-#endif
-
-#if 0
-    uint16_t array[16];
-    array[0] = 0x0000;
-    array[1] = 0x1111;
-    array[2] = 0x2222;
-    array[3] = 0x3333;
-    array[4] = 0x4444;
-    array[5] = 0x5555;
-    array[6] = 0x6666;
-    array[7] = 0x7777;
-    array[8] = 0x8888;
-    array[9] = 0x9999;
-    array[10]= 0xAAAA;
-    array[11]= 0xBBBB;
-    array[12]= 0xCCCC;
-    array[13]= 0xDDDD;
-    array[14]= 0xEEEE;
-    array[15]= 0xFFFF;
-#endif
-
 #if 1
     uint32_t array[256];
     int i;

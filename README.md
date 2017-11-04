@@ -2,8 +2,11 @@
 fft library for atmega328
 
 /ops/ - 16 bit floating point (float16) operation definitions
+
 /complex/ - complex float16 operation definitions
+
 /fft/ - fft and necessary functions
+
 
 A 16 bit float represents a number of the form
 
