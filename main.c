@@ -5,8 +5,7 @@
 
 #define lo8(x) ( (x) & 0xFF)
 #define hi8(x) ( ( (x) >> 8) & 0xFF)
-
-int16_t RAMEND = 0x07FF;
+#define RAMEND 0x07FF
 
 complex16 compose_complex(float16, float16);
 float16 convert_float_to_float16(void *);
@@ -32,16 +31,22 @@ int main()
 //  uint8_t y = reverse_bits(x, 5);
 
 #if 1
-    uint32_t array[256];
-    int i;
-    for(i=0; i < 256; i++)
+    complex16 array[16];
+    int16_t i;
+    float16 j;
+    for(i=0; i < 16; i++)
     {
-      array[i] = i;
+      j = __int16_to_float16(i);
+      array[i] = compose_complex(j, j);
     }
 #endif
 
-    permute_input(array, 4, 256);
+    permute_input(array, 4, 16);
 
+    for(i=0; i < 16; i++)
+    {
+      array[i] = __complex_mul(array[i], array[i]);
+    }
 
 /*
   float16 e = convert_float_to_float16(&a);

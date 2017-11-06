@@ -27,9 +27,8 @@ push  r20     /* Y+1 number of elements in array low byte */
 in  r29,  SPH
 in  r28,  SPL
 
-mov r25,  r21
-mov r24,  r20
-call  slog2
+movw r24, r20
+call  log2n
 std Y+8,  r25
 std Y+7,  r24
 
@@ -54,8 +53,7 @@ swap_load:
 ldd r31,  Y+6
 ldd r30,  Y+5
 
-mov r27,  r31
-mov r26,  r30
+movw r26, r30
 
 ldd r20,  Y+3
 rjmp  offset_shift_test

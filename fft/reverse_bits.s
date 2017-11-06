@@ -16,6 +16,5 @@ reverse_bits:
   rol r17
   subi  r22, 1
   brne  shift_loop1
-  mov r24,  r16
-  mov r25,  r17
+  movw  r24,  r16
   ret
