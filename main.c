@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <math.h>
 #include "ops/float16.h"
 #include "complex/complex16.h"
 #include "fft/fft.h"
@@ -24,20 +25,16 @@ void reset()
 
 int main()
 {
-//  float a = 0.995184727;
-//  float b = 0.09801714;
-//  uint8_t z = 5;
-//  uint8_t x = reverse_bits(z, 5);
-//  uint8_t y = reverse_bits(x, 5);
 
 #if 1
     complex16 array[16];
+    complex16 twiddles[8];
     int16_t i;
     float16 j;
     for(i=0; i < 16; i++)
     {
       j = __int16_to_float16(i);
-      array[i] = compose_complex(j, j);
+      array[i] = compose_complex(j, __int16_to_float16(0));
     }
 #endif
 
@@ -48,17 +45,6 @@ int main()
       array[i] = __complex_mul(array[i], array[i]);
     }
 
-/*
-  float16 e = convert_float_to_float16(&a);
-  float16 f = convert_float_to_float16(&b);
-  complex16 i = compose_complex(e, f);
-  complex16 k = __complex_mul(i, i);
-  complex16 l = __complex_mul(k, k);
-  complex16 m = __complex_mul(l, l);
-  complex16 n = __complex_mul(m, m);
-  complex16 o = __complex_mul(n, n);
-  complex16 p = __complex_mul(o, o);
-*/
   while(1)
     continue;
 }
