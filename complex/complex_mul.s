@@ -8,8 +8,12 @@ SREG        = 0x3F
 .global __complex_mul
 .text
 __complex_mul:
+push  r31
+push  r30
 push  r29
 push  r28
+push  r27
+push  r26
 in    r29,  SPH
 in    r28,  SPL
 sbiw  r28,  12
@@ -76,6 +80,10 @@ ldd   r22,  Y+19
 adiw  r28,  20
 out   SPH,  r29
 out   SPL,  r28
+pop   r26
+pop   r27
 pop   r28
 pop   r29
+pop   r30
+pop   r31
 ret

@@ -8,8 +8,12 @@ SREG        = 0x3F
 .global __complex_add
 .text
 __complex_add:
+push  r31
+push  r30
 push  r29
 push  r28
+push  r27
+push  r26
 rcall .
 rcall .
 push  r25     ;; BH [8]
@@ -39,6 +43,10 @@ ldd   r22,  Y+9
 adiw  r28,  12
 out   SPH,  r29
 out   SPL,  r28
+pop   r26
+pop   r27
 pop   r28
 pop   r29
+pop   r30
+pop   r31
 ret
