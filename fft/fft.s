@@ -99,8 +99,7 @@ lsl r26
 rol r27
 ldd r31,  Y+8
 ldd r30,  Y+7
-add r26,  r30
-adc r27,  r31
+add r30,
 rjmp skip1
 .L1jmp:
 rjmp  .L1
