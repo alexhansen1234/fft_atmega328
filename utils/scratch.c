@@ -42,7 +42,7 @@ int main()
   uint16_t c;
   uint16_t d;
   uint8_t debug = 0;
-  int n = 16;
+  int n = 32;
 
   printf("unsigned char twiddles[%d];\n", 2*n);
   for(int i=0; i < n/2; i++)
@@ -56,9 +56,9 @@ int main()
     uint32_t result = compose_complex(c, d);
     for(int j=0; j < 4; j++)
     {
-      printf("twiddles[%d] = 0x%02x;\n", i*4 + j, result&0xFF);
+      printf("twiddles[%d] = 0x%02x;\t", i*4 + j, result&0xFF);
       result = result>>8;
     }
-
+    printf("\n");
   }
 }
