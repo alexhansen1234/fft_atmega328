@@ -62,6 +62,10 @@ loop3_conditional:
 cp  _k, _j
 breq  out_loop3
 
+/* Start FFT Computations */
+
+/* End FFT Computations */
+
 inc _k
 rjmp  loop3_conditional
 out_loop3:
