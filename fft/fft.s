@@ -173,6 +173,8 @@ std Z+2,  r24
 std Z+1,  r23
 st  Z,    r22
 
+inc _k
+
 .L2_:
 lsl _j
 add _i, _j
