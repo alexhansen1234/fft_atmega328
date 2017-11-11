@@ -74,7 +74,7 @@ int main()
 
 
   permute_input(array, 4, 16);
-  fft_s(array, (complex16 *)twiddles, 16, 4);
+  fft_s(array, (complex16 *)twiddles, 16, 0);
 
 
   while(1)

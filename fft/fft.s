@@ -101,9 +101,15 @@ ldd r31,  Y+8
 ldd r30,  Y+7
 add r30,  r26
 adc r31,  r27
+movw  r26,  r30
+
 rjmp skip1
+
 .L1jmp:
 rjmp  .L1
+
+out:
+rjmp  epilogue
 
 skip1:
 mov r30,  _j
@@ -114,10 +120,7 @@ lsl r30
 rol r31
 add r30,  r26
 adc r31,  r27
-rjmp skip2
-out:
-rjmp  epilogue
-skip2:
+
 /* Load Odd Term for Complex Mul */
 ld  r18,  Z
 ldd r19,  Z+1
@@ -169,9 +172,11 @@ std Z+3,  r25
 std Z+2,  r24
 std Z+1,  r23
 st  Z,    r22
+
 .L2_:
 lsl _j
 add _i, _j
+
 .L1:
 rjmp .L1.test
 

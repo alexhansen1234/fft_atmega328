@@ -36,7 +36,7 @@ push  r19
 push  r18
 in    r29,  SPH
 in    r28,  SPL
-movw  r18,  r24
+movw  r24,  r18
 ;;mov   r25,  r19
 ;;mov   r24,  r18
 call  __float16_mul
