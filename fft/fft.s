@@ -18,14 +18,14 @@ _n = 6
 fft_s:
 push  r29
 push  r28
-          /* Y+16 */
-rcall .   /* Y+15  Twiddle * Odd High Two Bytes */
-          /* Y+14 */
-rcall .   /* Y+13 Twiddle * Odd Low Two Bytes */
-          /* Y+12 */
-rcall .   /* Y+11 Even High Two Bytes */
-          /* Y+10 */
-rcall .   /* Y+9 Even Low Two Bytes */
+rcall . /* Y+16 */
+        /* Y+15  Twiddle Odd High Two Bytes */
+rcall . /* Y+14 */
+        /* Y+13 Twiddle  Odd Low Two Bytes */
+rcall . /* Y+12 */
+        /* Y+11 Even High Two Bytes */
+rcall . /* Y+10 */
+        /* Y+9 Even Low Two Bytes */
 push  r25 /* Y+8 input array base high byte */
 push  r24 /* Y+7 input array base low byte */
 push  r23 /* Y+6 twiddle array base high byte */

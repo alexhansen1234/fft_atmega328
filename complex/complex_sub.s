@@ -9,10 +9,15 @@ SREG        = 0x3F
 .text
 __complex_sub:
 ldi   r16,  0x80
-eor   _zero_reg_, _zero_reg_
-cpse  r21,  _zero_reg_
+cp    _zero_reg_, r21
+cpc   _zero_reg_, r20
+breq  jmp1
 eor   r21,  r16
-cpse  r19,  _zero_reg_
+jmp1:
+cp    _zero_reg_, r19
+cpc   _zero_reg_, r18
+breq  jmp2
 eor   r19,  r16
+jmp2:
 call  __complex_add
 ret
