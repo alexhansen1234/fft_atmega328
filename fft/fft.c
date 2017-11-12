@@ -1,7 +1,6 @@
-void fft_c(complex float *in, int n, int inverse)
+void fft_c(complex float *in, int n)
 {
   float complex twiddles[n/2];
-  float complex odd;
 
   for(int i=0; i < n/2; i++)
   {
