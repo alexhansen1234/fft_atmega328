@@ -9,7 +9,12 @@ SREG        = 0x3F
 .global __float16_sub
 .text
 __float16_sub:
+cp    _zero_reg_, r23
+cpc   _zero_reg_, r22
+breq  second_op_zero
+
 ldi   r20,  0x80
 eor   r23,  r20
+second_op_zero:
 call  __float16_add
 ret

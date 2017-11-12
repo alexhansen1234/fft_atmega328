@@ -19,9 +19,9 @@ fft_s:
 push  r29
 push  r28
           /* Y+16 */
-rcall .   /* Y+15 Odd High Two Bytes */
+rcall .   /* Y+15  Twiddle * Odd High Two Bytes */
           /* Y+14 */
-rcall .   /* Y+13 Odd Low Two Bytes */
+rcall .   /* Y+13 Twiddle * Odd Low Two Bytes */
           /* Y+12 */
 rcall .   /* Y+11 Even High Two Bytes */
           /* Y+10 */
@@ -42,7 +42,7 @@ clr _j
 inc _j
 ldd _n, Y+3
 cp  _j, _n
-breq  out_loop1
+breq  out_loop1_ex
 mov _l, _n
 lsr _l
 
@@ -53,16 +53,111 @@ clr _i
 
 loop2_conditional:
 cp  _i, _n
-breq  out_loop2
+breq  out_loop2_ex
 
 loop3_init:
 clr _k
 
 loop3_conditional:
 cp  _k, _j
-breq  out_loop3
+breq  out_loop3_ex
 
 /* Start FFT Computations */
+mov r25,  _k
+mov r24,  _l
+mul r24,  r25
+lsl r0
+rol r1
+lsl r0
+rol r1
+
+ldd r31,  Y+6
+ldd r30,  Y+5
+add r30,  r0
+adc r31,  r1
+clr _zero_reg_
+
+ldd r25,  Z+3
+ldd r24,  Z+2
+ldd r23,  Z+1
+ld  r22,  Z
+
+ldd r27,  Y+8
+ldd r26,  Y+7
+mov r16,  _i
+clr r17
+add r16,  _k
+lsl r16
+rol r17
+lsl r16
+rol r17
+add r26,  r16
+adc r27,  r17
+movw  r30,  r26
+mov r16,  _j
+clr r17
+lsl r16
+rol r17
+lsl r16
+rol r17
+add r30,  r16
+adc r31,  r17
+rjmp  forward
+
+out_loop1_ex:
+rjmp  out_loop1
+out_loop2_ex:
+rjmp  out_loop2
+out_loop3_ex:
+rjmp  out_loop3
+
+forward:
+ldd r21,  Z+3
+ldd r20,  Z+2
+ldd r19,  Z+1
+ld  r18,  Z
+
+call  __complex_mul
+
+std Y+16, r25
+std Y+15, r24
+std Y+14, r23
+std Y+13, r22
+
+ld  r18,  X+
+ld  r19,  X+
+ld  r20,  X+
+ld  r21,  X
+
+sbiw  r26,  3
+
+std Y+12, r21
+std Y+11, r20
+std Y+10, r19
+std Y+9,  r18
+
+call  __complex_add
+
+st  X+, r22
+st  X+, r23
+st  X+, r24
+st  X,  r25
+
+ldd r25,  Y+12
+ldd r24,  Y+11
+ldd r23,  Y+10
+ldd r22,  Y+9
+ldd r21,  Y+16
+ldd r20,  Y+15
+ldd r19,  Y+14
+ldd r18,  Y+13
+
+call  __complex_sub
+
+std Z+3,  r25
+std Z+2,  r24
+std Z+1,  r23
+st  Z,    r22
 
 /* End FFT Computations */
 
