@@ -6,6 +6,7 @@ SREG = 0x3f
 /* float16 __float16_sqrt(float16); */
 /* approximates the square root of a 16 bit floating point number */
 /* argument is expected to be positive */
+/* similar in theory to fast inverse square root */
 .global __float16_sqrt
 .text
 __float16_sqrt:

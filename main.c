@@ -73,7 +73,11 @@ int main()
   permute_input(array, 4, N_SAMPLES);
   fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
 
-  j = __complex_magnitude(array[1]);
+  for(i=0; i < N_SAMPLES; i++)
+  {
+    j = __complex_magnitude(array[i]);  
+  }
+
 
   while(1)
     continue;
