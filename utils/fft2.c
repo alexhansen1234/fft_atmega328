@@ -30,6 +30,8 @@ int main(int argc, char *argv[])
 
     printf("\n");
 
+#if 0
+/* INVERSE CALC - JUST PERMUTE RESULT AND RUN THROUGH AGAIN */
     fft(permuted, N_SAMPLES);
 
     for(int i=0; i < N_SAMPLES; i++)
@@ -39,11 +41,12 @@ int main(int argc, char *argv[])
     }
 
     return 0;
+#endif
 }
 
 void print_complex(complex float a)
 {
-  printf("%f %+fj", creal(a), cimag(a));
+  printf("%f %+fj\tMag: %f", creal(a), cimag(a), cabs(a));
 }
 
 void permute_input(complex float *in, complex float *out, int size)
