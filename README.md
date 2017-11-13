@@ -7,7 +7,7 @@ clean with '$ make clean'
 
 ops/* - defines float16, operations and utility functions
 
-complex/* - defines complex float16, operations and utility functions
+complex/* - defines complex float16 (complex16), operations and utility functions
 
 fft/fft.s - iterative fft, up to 256 points
 
