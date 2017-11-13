@@ -1,11 +1,12 @@
 # fft_atmega328
 fft library for atmega328
 
-build with '$ make'
+build with 'make'
 
-clean with '$ make clean'
+clean directory with 'make clean'
 
 ops/* - defines float16, operations and utility functions
+
 
 complex/* - defines complex float16 (complex16), operations and utility functions
 

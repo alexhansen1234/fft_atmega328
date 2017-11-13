@@ -3,9 +3,9 @@ _zero_reg_ = 0x01
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
-/*
-  float16 __float16_sqrt(float16);
- */
+/* float16 __float16_sqrt(float16); */
+/* approximates the square root of a 16 bit floating point number */
+/* argument is expected to be positive */
 .global __float16_sqrt
 .text
 __float16_sqrt:
