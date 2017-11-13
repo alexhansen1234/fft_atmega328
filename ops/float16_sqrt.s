@@ -13,6 +13,6 @@ lsr r25
 ror r24
 ldi r23,  0x1F
 ldi r22,  0x6C
-add r22,  r24
-adc r23,  r25
+add r24,  r22
+adc r25,  r23
 ret
