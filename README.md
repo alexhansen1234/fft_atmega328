@@ -1,24 +1,14 @@
 # fft_atmega328
 fft library for atmega328
 
-/ops/ - 16 bit floating point (float16) operation definitions
+build with '$ make'
+clean with '$ make clean'
 
-/complex/ - complex float16 operation definitions
+ops/* - defines float16, operations and utility functions
 
-/fft/ - fft and necessary functions
+complex/* - defines complex float16, operations and utility functions
 
+fft/fft.s - iterative fft, up to 256 points
 
-A 16 bit float represents a number of the form
-
-(-1)^(B15)*(1.B7:B0)*2^(B14:B8 - 63)
-
-Bit 15 - Sign Bit
-  0 - positive
-  1 - negative
-
-Bits 14:8 - Exponent Bits
-  Exponent bias is 63 (0x3F)
-
-Bits 7:0 - Mantissa Bits
-
-compilation requires AVR-GCC.
+utils/scratch.c - used to generate the twiddle factor constants for fft
+utils/fft2.c - used to debug fft results
