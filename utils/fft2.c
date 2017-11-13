@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <complex.h>
-#define N_SAMPLES 32
+#define N_SAMPLES 64
 void fft(complex float *input, int size);
 void permute_input(complex float *in, complex float *out, int size);
 int reverse_bits(int num, int size);

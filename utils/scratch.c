@@ -42,7 +42,7 @@ int main()
   uint16_t c;
   uint16_t d;
   uint8_t debug = 0;
-  int n = 32;
+  int n = 64;
 
   printf("unsigned char twiddles[%d];\n", 2*n);
   for(int i=0; i < n/2; i++)
