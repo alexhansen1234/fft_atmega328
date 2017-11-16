@@ -9,9 +9,12 @@
     magnitudes, convert to 10bit ints, shift to 8bit ints, multiply our
     8bit ints by the 8bit int triplets used to describe the 32 unique
     colors available for display.
+
+    RAMEND purposely set below actual end of ram, due to graphical debugger
+    not showing ram addresses above 0x07F7
 */
 
-RAMEND = 0x07FF
+RAMEND = 0x07F7
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
