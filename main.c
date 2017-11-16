@@ -11,7 +11,7 @@
 
 complex16 compose_complex(float16, float16);
 float16 convert_float_to_float16(void *);
-
+/*
 void reset()
 {
   __asm__(
@@ -21,11 +21,12 @@ void reset()
     "ldi  r16,  hi8(%0) \n"
     "out  __SP_H__,  r16 \n"
     "rjmp main \n"
-    : /* NO OUTPUT */
+    : // NO OUTPUT
     : "ramend" (RAMEND)
-    : /* NO CLOBBERS */
+    : // NO CLOBBERS
   );
 }
+*/
 
 int main()
 {
