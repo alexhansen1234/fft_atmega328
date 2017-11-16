@@ -1,32 +1,12 @@
 #include <stdint.h>
-#include <math.h>
 #include "ops/float16.h"
 #include "complex/complex16.h"
 #include "fft/fft.h"
 
-#define lo8(x) ( (x) & 0xFF)
-#define hi8(x) ( ( (x) >> 8) & 0xFF)
-#define RAMEND 0x07F7
 #define N_SAMPLES 64
 
 complex16 compose_complex(float16, float16);
 float16 convert_float_to_float16(void *);
-/*
-void reset()
-{
-  __asm__(
-    "RESET: \n"
-    "ldi  r16,  lo8(%0) \n"
-    "out  __SP_L__,  r16  \n"
-    "ldi  r16,  hi8(%0) \n"
-    "out  __SP_H__,  r16 \n"
-    "rjmp main \n"
-    : // NO OUTPUT
-    : "ramend" (RAMEND)
-    : // NO CLOBBERS
-  );
-}
-*/
 
 int main()
 {

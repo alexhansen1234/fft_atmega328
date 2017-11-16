@@ -1,6 +1,7 @@
 .include "./interrupt_vectors/interrupt_vector_table.s"
 
-/* This file contains all the definitions for the various interrupts
+/*
+    This file contains all the definitions for the various interrupts
     which occur within an atmega328p. For this particular application,
     we will initialize a variable on the stack used to count the number
     of ADC conversions. After 64 samples, we will turn off the ADC and
@@ -8,11 +9,13 @@
     magnitudes, convert to 10bit ints, shift to 8bit ints, multiply our
     8bit ints by the 8bit int triplets used to describe the 32 unique
     colors available for display.
+*/
 
 RAMEND = 0x07FF
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
+
 
 RESET:
 ldi r16,  lo8(RAMEND)
