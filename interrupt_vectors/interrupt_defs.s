@@ -1,4 +1,5 @@
 .include "./interrupt_vectors/interrupt_vector_table.s"
+.include "./interrupt_vectors/memory_map.s"
 
 /*
     This file contains all the definitions for the various interrupts
@@ -14,27 +15,32 @@
     not showing ram addresses above 0x07F7
 */
 
-RAMEND = 0x07F4
+RAMEND = 0x07F7
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
 _temp_reg_ = 0x00
 _zero_reg_ = 0x01
 
-ADPS = 0
-ADIE = 3
-ADIF = 4
-ADATE = 5
-ADSC = 6
-ADEN = 7
-
-
 .text
 RESET:
-ldi r16,  lo8(RAMEND)
+ldi r16,  lo8(RAMEND-3)
 out SPL,  r16
-ldi r16,  hi8(RAMEND)
+ldi r16,  hi8(RAMEND-3)
 out SPH,  r16
+
+ldi r16,  0x00
+sts RAMEND, r16
+sts RAMEND-1, r16
+sts RAMEND-2, r16
+
+/* Set ADCSRA Prescaler to /128 */
+ldi r16,  1 << ADPS0 | 1 << ADPS1 | 1 << ADPS2
+sts ADCSRA, r16
+
+/* Set ADMUX Internal Ref to AVCC */
+ldi r16,  1 << REFS0
+sts ADMUX,  r16
 
 
 
