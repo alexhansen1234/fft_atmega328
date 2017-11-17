@@ -21,12 +21,22 @@ SREG = 0x3f
 _temp_reg_ = 0x00
 _zero_reg_ = 0x01
 
+ADPS = 0
+ADIE = 3
+ADIF = 4
+ADATE = 5
+ADSC = 6
+ADEN = 7
+
+
 .text
 RESET:
 ldi r16,  lo8(RAMEND)
 out SPL,  r16
 ldi r16,  hi8(RAMEND)
 out SPH,  r16
+
+
 
 jmp main
 
