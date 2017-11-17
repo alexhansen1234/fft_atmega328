@@ -10,6 +10,10 @@ float16 convert_float_to_float16(void *);
 
 int main()
 {
+  unsigned int * COMPLEX16_ARRAY_ADDR = (unsigned int *)0x07F6;
+  unsigned char * N_ADC_CONV = (unsigned char *)0x07F5;
+  *COMPLEX16_ARRAY_ADDR = 0x0123;
+  *N_ADC_CONV = 0x00;
   /*
   unsigned char twiddles[2 * N_SAMPLES];
   twiddles[0] = 0x00;   twiddles[1] = 0x3f;   twiddles[2] = 0x00;   twiddles[3] = 0x00;
@@ -41,6 +45,7 @@ int main()
   twiddles[56] = 0xd9;	twiddles[57] = 0xbe;	twiddles[58] = 0x87;	twiddles[59] = 0xbd;
   twiddles[60] = 0xf6;	twiddles[61] = 0xbe;	twiddles[62] = 0x8f;	twiddles[63] = 0xbc;
   */
+  /*
   unsigned char twiddles[128];
   twiddles[0] = 0x00;	twiddles[1] = 0x3f;	twiddles[2] = 0x00;	twiddles[3] = 0x00;
   twiddles[4] = 0xfd;	twiddles[5] = 0x3e;	twiddles[6] = 0x91;	twiddles[7] = 0xbb;
@@ -74,7 +79,8 @@ int main()
   twiddles[116] = 0xe9;	twiddles[117] = 0xbe;	twiddles[118] = 0x29;	twiddles[119] = 0xbd;
   twiddles[120] = 0xf6;	twiddles[121] = 0xbe;	twiddles[122] = 0x8f;	twiddles[123] = 0xbc;
   twiddles[124] = 0xfd;	twiddles[125] = 0xbe;	twiddles[126] = 0x91;	twiddles[127] = 0xbb;
-
+  */
+  /*
   complex16 array[N_SAMPLES];
 
   int16_t i;
@@ -93,7 +99,7 @@ int main()
   {
     j = __complex_magnitude(array[i]);
   }
-
+  */
 
   while(1)
     continue;

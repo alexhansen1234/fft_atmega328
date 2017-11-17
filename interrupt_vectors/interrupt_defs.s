@@ -14,17 +14,20 @@
     not showing ram addresses above 0x07F7
 */
 
-RAMEND = 0x07F7
+RAMEND = 0x07F4
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
+_temp_reg_ = 0x00
+_zero_reg_ = 0x01
 
-
+.text
 RESET:
 ldi r16,  lo8(RAMEND)
 out SPL,  r16
 ldi r16,  hi8(RAMEND)
 out SPH,  r16
+
 jmp main
 
 USART_RXC:
