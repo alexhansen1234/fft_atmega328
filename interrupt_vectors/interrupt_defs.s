@@ -16,6 +16,8 @@
 */
 
 RAMEND = 0x07F7
+COMPLEX16_ARRAY_ADDR = RAMEND - 1
+ADC_CONVERSIONS = RAMEND - 2
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
@@ -33,11 +35,6 @@ ldi r16,  0xFF
 out DDRD, r16
 ldi r16,  0x00
 out PORTD,  r16
-
-ldi r16,  0x00
-sts RAMEND, r16
-sts RAMEND-1, r16
-sts RAMEND-2, r16
 
 /* Set ADCSRA */
 ldi r16,  1<<ADEN | 1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 7<<ADPS0
@@ -116,19 +113,6 @@ ADC:
     push  r17
     in    r16,  SREG
     push  r16
-/*
-    lds   r16,  ADCH
-    mov   r17,  r16
-    msb_loop:
-    mov   r16,  r17
-    lsr   r16
-    or    r17,  r16
-    cp    r17,  r16
-    brne  msb_loop
-    lsr   r17
-    inc   r17
-    out   PORTD,  r17
-  */
     lds   r16,  ADCH
     out   PORTD,  r16
     lds   r16,  ADCSRA
