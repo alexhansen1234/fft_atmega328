@@ -102,16 +102,20 @@ REFS0 = 6
 REFS1 = 7
 
 /* ADCSRA Bit Defs */
-ADPS = 0
-ADIE = 3
-ADIF = 4
+ADPS0 = 0
+ADPS1 = 1
+ADPS2 = 2
+ADIE  = 3
+ADIF  = 4
 ADATE = 5
-ADSC = 6
-ADEN = 7
+ADSC  = 6
+ADEN  = 7
 
 /* ADCSRB Bit Defs */
-ADTS = 0
-ACME = 6
+ADTS0 = 0
+ADTS1 = 1
+ADTS2 = 2
+ACME  = 6
 
 /* DIDR0 Bit Defs */
 ADC0D = 0

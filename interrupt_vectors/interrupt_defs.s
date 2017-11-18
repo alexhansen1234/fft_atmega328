@@ -29,20 +29,25 @@ out SPL,  r16
 ldi r16,  hi8(RAMEND-3)
 out SPH,  r16
 
+ldi r16,  0xFF
+out DDRD, r16
+ldi r16,  0x00
+out PORTD,  r16
+
 ldi r16,  0x00
 sts RAMEND, r16
 sts RAMEND-1, r16
 sts RAMEND-2, r16
 
-/* Set ADCSRA Prescaler to /128 */
-ldi r16,  1 << ADPS0 | 1 << ADPS1 | 1 << ADPS2
+/* Set ADCSRA */
+ldi r16,  1<<ADEN | 1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 7<<ADPS0
 sts ADCSRA, r16
 
 /* Set ADMUX Internal Ref to AVCC */
-ldi r16,  1 << REFS0
+ldi r16,  1<<REFS0 | 1<<ADLAR
 sts ADMUX,  r16
 
-
+sei
 
 jmp main
 
@@ -107,7 +112,34 @@ USART_TXC:
         reti
 
 ADC:
-        reti
+    push  r16
+    push  r17
+    in    r16,  SREG
+    push  r16
+/*
+    lds   r16,  ADCH
+    mov   r17,  r16
+    msb_loop:
+    mov   r16,  r17
+    lsr   r16
+    or    r17,  r16
+    cp    r17,  r16
+    brne  msb_loop
+    lsr   r17
+    inc   r17
+    out   PORTD,  r17
+  */
+    lds   r16,  ADCH
+    out   PORTD,  r16
+    lds   r16,  ADCSRA
+    ori   r16,  1<<ADSC
+    sts   ADCSRA, r16
+    pop   r16
+    out   SREG, r16
+    pop   r17
+    pop   r16
+    reti
+
 
 EE_READY:
         reti

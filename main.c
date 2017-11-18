@@ -10,6 +10,9 @@ float16 convert_float_to_float16(void *);
 
 int main()
 {
+  unsigned char * ADCSRA = (unsigned char *)0x007A;
+  unsigned char ADCSRA_RESULT;
+  unsigned char * PORTD = (unsigned char *)0x002B;
   unsigned int * COMPLEX16_ARRAY_ADDR = (unsigned int *)0x07F6;
   unsigned char * N_ADC_CONV = (unsigned char *)0x07F5;
   *COMPLEX16_ARRAY_ADDR = 0x0123;
@@ -102,7 +105,9 @@ int main()
   */
 
   while(1)
+  {
     continue;
+  }
 }
 
 float16 convert_float_to_float16(void *in)
