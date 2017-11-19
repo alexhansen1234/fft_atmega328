@@ -18,14 +18,6 @@ int main()
 
   (*COMPLEX16_ARRAY_ADDR) = array;
 
-  asm volatile(
-    "lds  r16,  0x007A \n"
-    "ori  r16,  0x80 \n"
-    "sts  0x007A, r16 \n"
-    "sei \n"
-    :::"r16");
-
-  /*
   unsigned char twiddles[128];
   twiddles[0] = 0x00;	twiddles[1] = 0x3f;	twiddles[2] = 0x00;	twiddles[3] = 0x00;
   twiddles[4] = 0xfd;	twiddles[5] = 0x3e;	twiddles[6] = 0x91;	twiddles[7] = 0xbb;
@@ -59,7 +51,15 @@ int main()
   twiddles[116] = 0xe9;	twiddles[117] = 0xbe;	twiddles[118] = 0x29;	twiddles[119] = 0xbd;
   twiddles[120] = 0xf6;	twiddles[121] = 0xbe;	twiddles[122] = 0x8f;	twiddles[123] = 0xbc;
   twiddles[124] = 0xfd;	twiddles[125] = 0xbe;	twiddles[126] = 0x91;	twiddles[127] = 0xbb;
-  */
+
+
+  asm volatile(
+    "lds  r16,  0x007A \n"
+    "ori  r16,  0x80 \n"
+    "sts  0x007A, r16 \n"
+    "sei \n"
+    :::"r16");
+
   /*
 
   int16_t i;
