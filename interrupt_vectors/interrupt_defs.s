@@ -36,15 +36,15 @@ out DDRD, r16
 ldi r16,  0x00
 out PORTD,  r16
 
+/* The complex
+
 /* Set ADCSRA */
-ldi r16,  1<<ADEN | 1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 7<<ADPS0
+ldi r16,  1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 6<<ADPS0
 sts ADCSRA, r16
 
 /* Set ADMUX Internal Ref to AVCC */
-ldi r16,  1<<REFS0 | 1<<ADLAR
+ldi r16,  1<<REFS0 /*| 1<<ADLAR */
 sts ADMUX,  r16
-
-sei
 
 jmp main
 
@@ -111,15 +111,42 @@ USART_TXC:
 ADC:
     push  r16
     push  r17
+    push  r18
+    push  r19
+    push  r30
+    push  r31
     in    r16,  SREG
     push  r16
-    lds   r16,  ADCH
-    out   PORTD,  r16
+
+    lds   r16,  ADCL
+    lds   r17,  ADCH
+    lds   r18,  ADC_CONVERSIONS
+    mov   r19,  r18
+    lds   r30,  COMPLEX16_ARRAY_ADDR
+    lds   r31,  COMPLEX16_ARRAY_ADDR+1
+    lsl   r18
+    lsl   r18
+    add   r30,  r18
+    adc   r31,  _zero_reg_
+    st    Z,    r16
+    std   Z+1,  r17
+    inc   r19
+    sts   ADC_CONVERSIONS,  r19
+    cpi   r19,  64
+    breq  disable_adc
+
     lds   r16,  ADCSRA
     ori   r16,  1<<ADSC
     sts   ADCSRA, r16
+
+    disable_adc:
+
     pop   r16
     out   SREG, r16
+    pop   r31
+    pop   r30
+    pop   r19
+    pop   r18
     pop   r17
     pop   r16
     reti
