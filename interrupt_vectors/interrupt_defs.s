@@ -36,8 +36,6 @@ out DDRD, r16
 ldi r16,  0x00
 out PORTD,  r16
 
-/* The complex
-
 /* Set ADCSRA */
 ldi r16,  1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 6<<ADPS0
 sts ADCSRA, r16

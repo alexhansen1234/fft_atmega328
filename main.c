@@ -3,6 +3,8 @@
 #include "complex/complex16.h"
 #include "fft/fft.h"
 
+#define ADCSRA 0x007A
+#define ADEN 7
 #define N_SAMPLES 64
 
 complex16 compose_complex(float16, float16);
@@ -52,13 +54,13 @@ int main()
   twiddles[120] = 0xf6;	twiddles[121] = 0xbe;	twiddles[122] = 0x8f;	twiddles[123] = 0xbc;
   twiddles[124] = 0xfd;	twiddles[125] = 0xbe;	twiddles[126] = 0x91;	twiddles[127] = 0xbb;
 
-
+  /* Enable ADC Conversions */
   asm volatile(
-    "lds  r16,  0x007A \n"
-    "ori  r16,  0x80 \n"
-    "sts  0x007A, r16 \n"
+    "lds  r16,  %0 \n"
+    "ori  r16,  %1 \n"
+    "sts  %0, r16 \n"
     "sei \n"
-    :::"r16");
+    ::"M" (ADCSRA), "M" 1<<ADEN :"r16");
 
   /*
 
