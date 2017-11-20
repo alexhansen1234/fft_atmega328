@@ -130,6 +130,13 @@ ADC:
     std   Z+1,  r17
     inc   r19
     sts   ADC_CONVERSIONS,  r19
+
+    /* TEST IF ADC CONVERSIONS HAPPEN IF ADCSRA IS NOT RESET */
+    in    r16,  PORTD
+    com   r16
+    out   PORTD,  r16
+    /* END TEST */
+
     cpi   r19,  64
     breq  disable_adc
 

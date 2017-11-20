@@ -60,10 +60,9 @@ int main()
     "ori  r16,  %1 \n"
     "sts  %0, r16 \n"
     "sei \n"
-    ::"M" (ADCSRA), "M" 1<<ADEN :"r16");
+    ::"M" (ADCSRA), "M" (1<<ADEN) :"r16");
 
   /*
-
   int16_t i;
   float16 j;
   for(i=0; i < N_SAMPLES; i++)
