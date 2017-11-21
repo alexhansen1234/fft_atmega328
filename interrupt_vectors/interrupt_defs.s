@@ -132,6 +132,8 @@ ADC:
     sts   ADC_CONVERSIONS,  r19
 
     /* TEST IF ADC CONVERSIONS HAPPEN IF ADCSRA IS NOT RESET */
+    /* Does ADCSRA 1<<ADSC need to be reset ? */
+    /* 0<<ADEN turns off the ADC definitely */
     in    r16,  PORTD
     com   r16
     out   PORTD,  r16
