@@ -26,6 +26,7 @@ st    Z,    r24
 adiw  r30,  4
 ldd   r25,  Y+1
 subi  r25,  1
+std   Y+1,  r25
 brne  convert_loop
 
 pop _temp_reg_
