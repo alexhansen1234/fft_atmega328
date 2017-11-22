@@ -20,7 +20,7 @@ movw  r30,  r24
 convert_loop:
 ldd   r25,  Z+1
 ld    r24,  Z
-call  __float16_to_int16
+call  __float16_to_int8
 std   Z+1,  r25
 st    Z,    r24
 adiw  r30,  4
