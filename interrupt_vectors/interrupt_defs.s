@@ -37,7 +37,7 @@ ldi r16,  0x00
 out PORTD,  r16
 
 /* Set ADCSRA */
-ldi r16,  1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 6<<ADPS0
+ldi r16,  1<<ADEN | 1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 6<<ADPS0
 sts ADCSRA, r16
 
 /* Set ADMUX Internal Ref to AVCC */
@@ -131,19 +131,36 @@ ADC:
     inc   r19
     sts   ADC_CONVERSIONS,  r19
 
-    /* TEST IF ADC CONVERSIONS HAPPEN IF ADCSRA IS NOT RESET */
-    /* Does ADCSRA 1<<ADSC need to be reset ? */
-    /* 0<<ADEN turns off the ADC definitely */
-    in    r16,  PORTD
-    com   r16
+    /*Test Sampled value*/
+
+    lsr   r17
+    ror   r16
+    lsr   r17
+    ror   r16
     out   PORTD,  r16
-    /* END TEST */
+    
+
+    /* Test ADC_CONVERSIONS value
+    out   PORTD,  r19
+     */
+
+    /* Loop to slow down display
+    ldi   r18,  10
+    ldi   r17,  255
+    ldi   r16,  255
+    loop:
+    dec r16
+    brne  loop
+    dec r17
+    brne  loop
+    dec r18
+    brne  loop
+    */
 
     cpi   r19,  64
-    breq  disable_adc
-
+    brne  disable_adc
     lds   r16,  ADCSRA
-    ori   r16,  1<<ADSC
+    andi  r16,  ~(1<<ADEN)
     sts   ADCSRA, r16
 
     disable_adc:

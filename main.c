@@ -3,6 +3,7 @@
 #include "complex/complex16.h"
 #include "fft/fft.h"
 
+#define RAMEND 0x07F7
 #define ADCSRA 0x007A
 #define ADEN 7
 #define N_SAMPLES 64
@@ -12,13 +13,16 @@ float16 convert_float_to_float16(void *);
 
 int main()
 {
-  complex16 ** COMPLEX16_ARRAY_ADDR = (complex16 **)0x07F6;
-  unsigned char * N_ADC_CONV = (unsigned char *)0x07F5;
+
+  complex16 ** COMPLEX16_ARRAY_ADDR = (complex16 **)(RAMEND - 1);
+  unsigned char * N_ADC_CONV = (unsigned char *)(RAMEND - 2);
   *N_ADC_CONV = 0x00;
 
   complex16 array[N_SAMPLES];
+  complex16 test;
 
   (*COMPLEX16_ARRAY_ADDR) = array;
+  uint16_t i;
 
   unsigned char twiddles[128];
   twiddles[0] = 0x00;	twiddles[1] = 0x3f;	twiddles[2] = 0x00;	twiddles[3] = 0x00;
@@ -55,6 +59,7 @@ int main()
   twiddles[124] = 0xfd;	twiddles[125] = 0xbe;	twiddles[126] = 0x91;	twiddles[127] = 0xbb;
 
   /* Enable ADC Conversions */
+
   asm volatile(
     "lds  r16,  %0 \n"
     "ori  r16,  %1 \n"
@@ -62,16 +67,20 @@ int main()
     "sei \n"
     ::"M" (ADCSRA), "M" (1<<ADEN) :"r16");
 
-  /*
-  int16_t i;
-  float16 j;
+  #if 1
   for(i=0; i < N_SAMPLES; i++)
   {
-    j = __int16_to_float16(i);
-    array[i] = compose_complex(j, __int16_to_float16(0));
+    array[i] = (complex16)i;
   }
 
+  __convert_ints_complex16_array(array, N_SAMPLES);
+  permute_input(array, 4, N_SAMPLES);
+  fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
+  __complex16_array_magnitudes(array, N_SAMPLES);
+  __convert_complex16_array_int16(array, N_SAMPLES);
+  #endif
 
+  /*
   permute_input(array, 4, N_SAMPLES);
   fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
 
@@ -80,9 +89,18 @@ int main()
     j = __complex_magnitude(array[i]);
   }
   */
-
   while(1)
   {
+    #if 0
+    if((*N_ADC_CONV) == 64)
+    {
+      __convert_ints_complex16_array(array, N_SAMPLES);
+      permute_input(array, 4, N_SAMPLES);
+      fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
+      __complex16_array_magnitudes(array, N_SAMPLES);
+
+    }
+    #endif
     continue;
   }
 }
