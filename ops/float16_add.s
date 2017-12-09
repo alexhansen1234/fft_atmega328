@@ -167,6 +167,9 @@ brsh  final_mant_shift_right
 rjmp  final_mant_shift_left
 
 final_mant_shift_right:
+cp    _zero_reg_, r17
+cpc   _zero_reg_, r16
+breq  adj_exp
 lsr   r17
 ror   r16
 inc   r20
@@ -175,6 +178,9 @@ brne  final_mant_shift_right
 rjmp  adj_exp
 
 final_mant_shift_left:
+cp    _zero_reg_, r17
+cpc   _zero_reg_, r16
+breq  adj_exp
 lsl   r16
 rol   r17
 dec   r20

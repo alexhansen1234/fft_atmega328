@@ -2,11 +2,14 @@
 #include "ops/float16.h"
 #include "complex/complex16.h"
 #include "fft/fft.h"
+#include "ws2812/ws2812.h"
 
 #define RAMEND 0x07F7
 #define ADCSRA 0x007A
 #define ADEN 7
 #define N_SAMPLES 64
+#define N_LEDS 31
+#define N_ADC_CONV_ADDR (RAMEND - 2)
 
 complex16 compose_complex(float16, float16);
 float16 convert_float_to_float16(void *);
@@ -14,15 +17,23 @@ float16 convert_float_to_float16(void *);
 int main()
 {
 
+  uint8_t * PORTB = (uint8_t *)0x0025;
+  uint8_t * PORTD = (uint8_t *)0x002B;
+
   complex16 ** COMPLEX16_ARRAY_ADDR = (complex16 **)(RAMEND - 1);
-  unsigned char * N_ADC_CONV = (unsigned char *)(RAMEND - 2);
-  *N_ADC_CONV = 0x00;
+
+
+  uint8_t * N_ADC_CONV = (uint8_t *)(RAMEND - 2);
+
+  *(N_ADC_CONV) = 0xAA;
+
+  uint8_t ** COLOR_ARRAY_ADDR = (uint8_t **)(RAMEND - 4);
 
   complex16 array[N_SAMPLES];
-  complex16 test;
+  uint8_t colors[93];
 
   (*COMPLEX16_ARRAY_ADDR) = array;
-  uint16_t i;
+  (*COLOR_ARRAY_ADDR) = colors;
 
   unsigned char twiddles[128];
   twiddles[0] = 0x00;	twiddles[1] = 0x3f;	twiddles[2] = 0x00;	twiddles[3] = 0x00;
@@ -58,51 +69,88 @@ int main()
   twiddles[120] = 0xf6;	twiddles[121] = 0xbe;	twiddles[122] = 0x8f;	twiddles[123] = 0xbc;
   twiddles[124] = 0xfd;	twiddles[125] = 0xbe;	twiddles[126] = 0x91;	twiddles[127] = 0xbb;
 
-  /* Enable ADC Conversions */
+  colors[0] = 0x01;   colors[1] = 0xfe;   colors[2] = 0x00;
+  colors[3] = 0x1a;   colors[4] = 0xe5;   colors[5] = 0x00;
+  colors[6] = 0x33;   colors[7] = 0xcc;   colors[8] = 0x00;
+  colors[9] = 0x4c;   colors[10] = 0xb3;  colors[11] = 0x00;
+  colors[12] = 0x65;  colors[13] = 0x9a;  colors[14] = 0x00;
+  colors[15] = 0x7e;  colors[16] = 0x81;  colors[17] = 0x00;
+  colors[18] = 0x97;  colors[19] = 0x68;  colors[20] = 0x00;
+  colors[21] = 0xb0;  colors[22] = 0x4f;  colors[23] = 0x00;
+  colors[24] = 0xc9;  colors[25] = 0x36;  colors[26] = 0x00;
+  colors[27] = 0xe2;  colors[28] = 0x1d;  colors[29] = 0x00;
+  colors[30] = 0xfb;  colors[31] = 0x04;  colors[32] = 0x00;
+  colors[33] = 0xea;  colors[34] = 0x00;  colors[35] = 0x15;
+  colors[36] = 0xd1;  colors[37] = 0x00;  colors[38] = 0x2e;
+  colors[39] = 0xb8;  colors[40] = 0x00;  colors[41] = 0x47;
+  colors[42] = 0x9f;  colors[43] = 0x00;  colors[44] = 0x60;
+  colors[45] = 0x86;  colors[46] = 0x00;  colors[47] = 0x79;
+  colors[48] = 0x6d;  colors[49] = 0x00;  colors[50] = 0x92;
+  colors[51] = 0x54;  colors[52] = 0x00;  colors[53] = 0xab;
+  colors[54] = 0x3b;  colors[55] = 0x00;  colors[56] = 0xc4;
+  colors[57] = 0x22;  colors[58] = 0x00;  colors[59] = 0xdd;
+  colors[60] = 0x09;  colors[61] = 0x00;  colors[62] = 0xf6;
+  colors[63] = 0x00;  colors[64] = 0x10;  colors[65] = 0xef;
+  colors[66] = 0x00;  colors[67] = 0x29;  colors[68] = 0xd6;
+  colors[69] = 0x00;  colors[70] = 0x42;  colors[71] = 0xbd;
+  colors[72] = 0x00;  colors[73] = 0x5b;  colors[74] = 0xa4;
+  colors[75] = 0x00;  colors[76] = 0x74;  colors[77] = 0x8b;
+  colors[78] = 0x00;  colors[79] = 0x8d;  colors[80] = 0x72;
+  colors[81] = 0x00;  colors[82] = 0xa6;  colors[83] = 0x59;
+  colors[84] = 0x00;  colors[85] = 0xbf;  colors[86] = 0x40;
+  colors[87] = 0x00;  colors[88] = 0xd8;  colors[89] = 0x27;
+  colors[90] = 0x00;  colors[91] = 0xf1;  colors[92] = 0x0e;
 
-  asm volatile(
-    "lds  r16,  %0 \n"
-    "ori  r16,  %1 \n"
-    "sts  %0, r16 \n"
-    "sei \n"
-    ::"M" (ADCSRA), "M" (1<<ADEN) :"r16");
 
-  #if 1
-  for(i=0; i < N_SAMPLES; i++)
-  {
-    array[i] = (complex16)i;
-  }
-
-  __convert_ints_complex16_array(array, N_SAMPLES);
-  permute_input(array, 4, N_SAMPLES);
-  fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
-  __complex16_array_magnitudes(array, N_SAMPLES);
-  __convert_complex16_array_int16(array, N_SAMPLES);
-  #endif
-
-  /*
-  permute_input(array, 4, N_SAMPLES);
-  fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
-
-  for(i=0; i < N_SAMPLES; i++)
-  {
-    j = __complex_magnitude(array[i]);
-  }
-  */
+#if 0
+  float in = 1.0;
+  uint16_t i = 0;
+  uint8_t j = 0;
   while(1)
   {
-    #if 0
-    if((*N_ADC_CONV) == 64)
+    j++;
+    for(i=0; i < N_SAMPLES; i++)
     {
-      __convert_ints_complex16_array(array, N_SAMPLES);
-      permute_input(array, 4, N_SAMPLES);
-      fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
-      __complex16_array_magnitudes(array, N_SAMPLES);
-
+      if(i < N_SAMPLES / 2)
+        array[i] = (complex16)j;
+      else
+        array[i] = (complex16)0;
     }
-    #endif
-    continue;
+
+    __convert_ints_complex16_array(array, N_SAMPLES);
+    permute_input(array, 4, N_SAMPLES);
+    fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
+    __complex16_array_magnitudes(array, N_SAMPLES);
+    __convert_complex16_array_int16(array, N_SAMPLES);
+    __mul_mag_colors(array, colors, N_SAMPLES);
+    display_color_array(array, N_SAMPLES, N_LEDS);
   }
+
+#endif
+
+#if 1
+  uint16_t i = 0;
+
+  enable_adc();
+
+  while(1)
+  {
+      if(*(N_ADC_CONV) == 64)
+      {
+        *(PORTB) = (*PORTB) ^ 0x02;
+        __convert_ints_complex16_array(array, N_SAMPLES);
+        permute_input(array, 4, N_SAMPLES);
+        fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);
+        __complex16_array_magnitudes(array, N_SAMPLES);
+        __convert_complex16_array_int16(array, N_SAMPLES);
+        __mul_mag_colors(array, colors, N_SAMPLES);
+        display_color_array(array, N_SAMPLES, N_LEDS);
+
+        *(N_ADC_CONV) = 0;
+        enable_timer0();
+      }
+  }
+#endif
 }
 
 float16 convert_float_to_float16(void *in)

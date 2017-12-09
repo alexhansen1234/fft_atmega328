@@ -37,7 +37,7 @@ rjmp  epilogue
 
 ret_zero:
 eor r25,  r25
-eor r25,  r25
+eor r24,  r24
 rjmp  epilogue
 
 shift_left_loop:

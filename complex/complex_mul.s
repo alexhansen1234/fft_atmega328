@@ -8,6 +8,7 @@ SREG        = 0x3F
 .global __complex_mul
 .text
 __complex_mul:
+
 push  r31
 push  r30
 push  r29

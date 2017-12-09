@@ -4,7 +4,7 @@ SREG = 0x3f
 _temp_reg_ = 0x00
 _zero_reg_ = 0x01
 
-/* extern void __complex16_array_magnitudes (complex16 * array, uint8_t n_items); */
+/* extern void __complex16_array_magnitudes (complex16 * array, uint_t n_items); */
 .global __complex16_array_magnitudes
 .text
 __complex16_array_magnitudes:
@@ -13,6 +13,8 @@ push  r30
 push  r29
 push  r28
 push  r22
+in  r29,  SPH
+in  r28,  SPL
 movw  r30,  r24
 
 cpx_mag_loop:

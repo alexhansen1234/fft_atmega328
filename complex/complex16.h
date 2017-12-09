@@ -12,4 +12,5 @@
   extern void __convert_ints_complex16_array(complex16 *, uint16_t);
   extern void __complex16_array_magnitudes (complex16 *, uint8_t);
   extern void __convert_complex16_array_int16 (complex16 *, uint8_t);
+  extern void __mul_mag_colors (complex16 *, uint8_t *, uint8_t);
 #endif

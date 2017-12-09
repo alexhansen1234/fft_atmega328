@@ -18,6 +18,7 @@
 RAMEND = 0x07F7
 COMPLEX16_ARRAY_ADDR = RAMEND - 1
 ADC_CONVERSIONS = RAMEND - 2
+COLOR_ARRAY_ADDR = RAMEND - 4
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
@@ -26,25 +27,52 @@ _zero_reg_ = 0x01
 
 .text
 RESET:
-ldi r16,  lo8(RAMEND-3)
+ldi r16,  lo8(RAMEND-5)
 out SPL,  r16
-ldi r16,  hi8(RAMEND-3)
+ldi r16,  hi8(RAMEND-5)
 out SPH,  r16
 
 ldi r16,  0xFF
+out DDRB,  r16
+
+ldi r16,  0xFF
 out DDRD, r16
-ldi r16,  0x00
-out PORTD,  r16
 
-/* Set ADCSRA */
-ldi r16,  1<<ADEN | 1<<ADSC | 1<<ADATE | 1<<ADIF | 1<<ADIE | 6<<ADPS0
-sts ADCSRA, r16
-
-/* Set ADMUX Internal Ref to AVCC */
-ldi r16,  1<<REFS0 /*| 1<<ADLAR */
-sts ADMUX,  r16
+call init_timer0
+call init_adc
 
 jmp main
+
+init_timer0:
+        ldi r16,  1 << WGM01 | 0 << WGM00
+        out TCCR0A, r16
+
+        ldi r16,  0 << WGM02 | 0 << CS02 | 1 << CS01 | 0 << CS00
+        out TCCR0B, r16
+
+        ldi r16,  49
+        out OCR0A, r16
+
+        ldi r16,  0 << OCIEB | 1 << OCIEA | 0 << TOIE
+        sts TIMSK0, r16
+
+        ret
+
+init_adc:
+        ldi r16,  1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE
+        sts ADCSRA, r16
+
+        ldi r16,  3 << ADTS0
+        sts ADCSRB, r16
+
+        ldi r16,  1 << REFS0 | 1 << ADLAR
+        sts ADMUX,  r16
+
+        ldi r16,  ~(1 << ADC0D)
+        sts DIDR0,  r16
+
+        ret
+
 
 USART_RXC:
         reti
@@ -116,8 +144,7 @@ ADC:
     in    r16,  SREG
     push  r16
 
-    lds   r16,  ADCL
-    lds   r17,  ADCH
+    lds   r16,  ADCH
     lds   r18,  ADC_CONVERSIONS
     mov   r19,  r18
     lds   r30,  COMPLEX16_ARRAY_ADDR
@@ -127,43 +154,19 @@ ADC:
     add   r30,  r18
     adc   r31,  _zero_reg_
     st    Z,    r16
-    std   Z+1,  r17
     inc   r19
     sts   ADC_CONVERSIONS,  r19
-
-    /*Test Sampled value*/
-
-    lsr   r17
-    ror   r16
-    lsr   r17
-    ror   r16
-    out   PORTD,  r16
-    
-
-    /* Test ADC_CONVERSIONS value
-    out   PORTD,  r19
-     */
-
-    /* Loop to slow down display
-    ldi   r18,  10
-    ldi   r17,  255
-    ldi   r16,  255
-    loop:
-    dec r16
-    brne  loop
-    dec r17
-    brne  loop
-    dec r18
-    brne  loop
-    */
-
     cpi   r19,  64
-    brne  disable_adc
-    lds   r16,  ADCSRA
-    andi  r16,  ~(1<<ADEN)
-    sts   ADCSRA, r16
+    brne  continue_timer
+    ldi   r16,  0
+    out   TCCR0B, r16
+    continue_timer:
 
-    disable_adc:
+    in    r16,    PORTB
+    ldi   r17,    0x01
+    eor   r16,    r17
+    out   PORTB,  r16
+
 
     pop   r16
     out   SREG, r16
@@ -173,6 +176,7 @@ ADC:
     pop   r18
     pop   r17
     pop   r16
+
     reti
 
 

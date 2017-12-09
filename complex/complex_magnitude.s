@@ -12,6 +12,12 @@ SREG = 0x3f
 .global __complex_magnitude
 .text
 __complex_magnitude:
+cp  _zero_reg_, r25
+cpc _zero_reg_, r24
+cpc _zero_reg_, r23
+cpc _zero_reg_, r22
+breq  return_zero
+
 push  r31
 push  r30
 push  r29
@@ -41,4 +47,7 @@ pop   r28
 pop   r29
 pop   r30
 pop   r31
+
+return_zero:
+
 ret

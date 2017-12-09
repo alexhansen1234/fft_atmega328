@@ -118,11 +118,55 @@ ADTS2 = 2
 ACME  = 6
 
 /* DIDR0 Bit Defs */
-ADC0D = 0
-ADC1D = 1
-ADC2D = 2
-ADC3D = 3
-ADC4D = 4
-ADC5D = 5
-ADC6D = 6
-ADC7D = 7
+ADC0D   = 0
+ADC1D   = 1
+ADC2D   = 2
+ADC3D   = 3
+ADC4D   = 4
+ADC5D   = 5
+ADC6D   = 6
+ADC7D   = 7
+
+/* TCCR0A Bit Defs */
+WGM00   = 0
+WGM01   = 1
+COM0B0  = 4
+COM0B1  = 5
+COM0A0  = 6
+COM0A1  = 7
+
+/* TCCR0B Bit Defs */
+CS00    = 0
+CS01    = 1
+CS02    = 2
+WGM02   = 3
+FOC0B   = 6
+FOC0A   = 7
+
+/* TCCR1A Bit Defs */
+WGM10   = 0
+WGM11   = 1
+COM1A0  = 4
+COM1A1  = 5
+COM1B0  = 6
+COM1B1  = 7
+
+/* TCCR1B Bit Defs */
+CS10    = 0
+CS11    = 1
+CS12    = 2
+WGM12   = 3
+WGM13   = 4
+ICES1   = 6
+ICNC1   = 7
+
+/* TIMSK0 Bit Defs */
+TOIE    = 0
+OCIEA   = 1
+OCIEB   = 2
+ICIE    = 5
+
+/* TIFR0 Bit Defs */
+TOV     = 0
+OCFA    = 1
+OCFB    = 2

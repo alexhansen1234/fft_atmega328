@@ -11,6 +11,8 @@ SREG = 0x3f
 .global permute_input
 .text
 permute_input:
+push  r31
+push  r30
 push  r29
 push  r28
               /* Y+10 current offset for swap high byte */
@@ -105,4 +107,6 @@ out SPH,  r29
 out SPL,  r28
 pop r28
 pop r29
+pop r30
+pop r31
 ret

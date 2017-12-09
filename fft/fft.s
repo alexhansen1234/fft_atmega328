@@ -16,8 +16,12 @@ _n = 6
 .global fft_s
 .text
 fft_s:
+push  r31
+push  r30
 push  r29
 push  r28
+push  r27
+push  r26
 rcall . /* Y+16 */
         /* Y+15  Twiddle Odd High Two Bytes */
 rcall . /* Y+14 */
@@ -165,12 +169,15 @@ inc _k
 rjmp  loop3_conditional
 out_loop3:
 
+
 loop2_increments:
 mov _temp_reg_, _j
 lsl _temp_reg_
 add _i, _temp_reg_
 cp  _i, _n
 rjmp  loop2_conditional
+
+
 
 out_loop2:
 
@@ -196,6 +203,11 @@ epilogue:
 adiw  r28, 16
 out SPH,  r29
 out SPL,  r28
+pop r26
+pop r27
 pop r28
 pop r29
+pop r30
+pop r31
+
 ret

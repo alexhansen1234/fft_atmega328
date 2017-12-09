@@ -13,7 +13,10 @@ int main(int argc, char *argv[])
 
     for(int i=0; i < N_SAMPLES; i++)
     {
-      data[i] = i;
+      if(i < N_SAMPLES / 2)
+        data[i] = 32;
+      else
+        data[i] = 0;
     }
 
     float complex permuted[N_SAMPLES];
@@ -24,6 +27,7 @@ int main(int argc, char *argv[])
 
     for(int i=0; i < N_SAMPLES; i++)
     {
+      printf("%d.\t", i - 1);
       print_complex(permuted[i]);
       printf("\n");
     }
