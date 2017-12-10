@@ -137,7 +137,7 @@ int main()
   {
       if(*(N_ADC_CONV) == 64)
       {
-        *(PORTB) = (*PORTB) ^ 0x02;
+
         __convert_ints_complex16_array(array, N_SAMPLES);
         permute_input(array, 4, N_SAMPLES);
         fft_s(array, (complex16 *)twiddles, N_SAMPLES, 0);

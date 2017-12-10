@@ -50,7 +50,7 @@ init_timer0:
         ldi r16,  0 << WGM02 | 0 << CS02 | 1 << CS01 | 0 << CS00
         out TCCR0B, r16
 
-        ldi r16,  49
+        ldi r16,  255
         out OCR0A, r16
 
         ldi r16,  0 << OCIEB | 1 << OCIEA | 0 << TOIE
@@ -59,7 +59,7 @@ init_timer0:
         ret
 
 init_adc:
-        ldi r16,  1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE
+        ldi r16,  1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE | 7 << ADPS0
         sts ADCSRA, r16
 
         ldi r16,  3 << ADTS0
@@ -136,7 +136,6 @@ USART_TXC:
 
 ADC:
     push  r16
-    push  r17
     push  r18
     push  r19
     push  r30
@@ -154,19 +153,19 @@ ADC:
     add   r30,  r18
     adc   r31,  _zero_reg_
     st    Z,    r16
+    std   Z+1,  0
+    std   Z+2,  0
+    std   Z+3,  0
     inc   r19
     sts   ADC_CONVERSIONS,  r19
+
     cpi   r19,  64
     brne  continue_timer
+
     ldi   r16,  0
     out   TCCR0B, r16
+
     continue_timer:
-
-    in    r16,    PORTB
-    ldi   r17,    0x01
-    eor   r16,    r17
-    out   PORTB,  r16
-
 
     pop   r16
     out   SREG, r16
@@ -174,7 +173,6 @@ ADC:
     pop   r30
     pop   r19
     pop   r18
-    pop   r17
     pop   r16
 
     reti

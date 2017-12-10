@@ -11,5 +11,6 @@ _zero_reg_ = 0x01
 enable_timer0:
 ldi r16,  1 << CS01
 out TCCR0B, r16
+
 sei
 ret

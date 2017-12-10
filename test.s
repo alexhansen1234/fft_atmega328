@@ -10,7 +10,6 @@ RESET:
 
         ldi r16, 0xFF
         out DDRB, r16
-        out PORTB,  r16
 
         call init_timer0
         call init_adc
@@ -19,6 +18,7 @@ RESET:
         jmp main
 
 main:
+
 rjmp main
 
 init_timer0:
@@ -37,11 +37,14 @@ init_timer0:
         ret
 
 init_adc:
-        ldi r16,  1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE
+        ldi r16,  1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE | 7 << ADPS0
         sts ADCSRA, r16
 
         ldi r16,  3 << ADTS0
         sts ADCSRB, r16
+
+        ldi r16,  1 << REFS0 | 1 << ADLAR
+        sts ADMUX,  r16
 
         ldi r16,  ~(1 << ADC0D)
         sts DIDR0,  r16
@@ -111,25 +114,17 @@ USART_TXC:
 
 ADC:
 push  r16
-push  r17
 in    r16,  SREG
 push  r16
 
-lds   _temp_reg_, ADCL
-lds   _temp_reg_, ADCH
-eor   _temp_reg_, _temp_reg_
-
-in    r16,  PORTB
-ldi   r17,  3
-eor   r16,  r17
+lds   r16,  ADCH
 out   PORTB,  r16
 
 pop   r16
 out   SREG, r16
-pop   r17
 pop   r16
 
-        reti
+      reti
 
 EE_READY:
         reti
