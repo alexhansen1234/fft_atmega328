@@ -15,19 +15,10 @@ complex16 compose_complex(float16, float16);
 float16 convert_float_to_float16(void *);
 
 int main()
-{ 
-  uint8_t * PORTB = (uint8_t *)0x0025;
-  uint8_t * PORTD = (uint8_t *)0x002B;
-
+{
   complex16 ** COMPLEX16_ARRAY_ADDR = (complex16 **)(RAMEND - 1);
-
-
   uint8_t * N_ADC_CONV = (uint8_t *)(RAMEND - 2);
-
-  *(N_ADC_CONV) = 0xAA;
-
   uint8_t ** COLOR_ARRAY_ADDR = (uint8_t **)(RAMEND - 4);
-
   complex16 array[N_SAMPLES];
   uint8_t colors[93];
 
@@ -128,8 +119,6 @@ int main()
 #endif
 
 #if 1
-  uint16_t i = 0;
-
   enable_adc();
 
   while(1)

@@ -14,7 +14,7 @@ show:
   in  r16,  OUTPUT_PORT
   andi r16, ~(1<<OUTPUT_BIT)
   out OUTPUT_PORT,  r16
-  ldi r16, 28
+  ldi r16, 27
 reset_loop:
   dec r16
   brne reset_loop

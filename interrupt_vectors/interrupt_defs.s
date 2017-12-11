@@ -42,10 +42,6 @@ ldi r25,  0
 ldi r24,  145
 call init_ws2812
 
-ldi r25,  0
-ldi r24,  145
-call init_ws2812
-
 call init_timer0
 call init_adc
 
