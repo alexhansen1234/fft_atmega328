@@ -1,7 +1,7 @@
 complex_demo.hex: complex_demo.elf
 	avr-objcopy -O ihex complex_demo.elf complex_demo.hex
-complex_demo.elf: interrupt_defs.o main.o float16_add.o float16_sub.o float16_mul.o float16_div.o int_to_float16.o complex_add.o complex_sub.o complex_mul.o reverse_bits.o permute_input.o log2n.o fft.o complex_magnitude.o complex16_array_magnitudes.o float16_sqrt.o convert_ints_complex16_array.o convert_complex16_array_int16.o float16_to_int8.o mul_mag_colors.o display_color_array.o load_grb_val.o show.o enable_adc.o enable_timer0.o
-	avr-ld -e init -o complex_demo.elf interrupt_defs.o main.o float16_add.o float16_sub.o float16_mul.o float16_div.o int_to_float16.o complex_add.o complex_sub.o complex_mul.o convert_ints_complex16_array.o reverse_bits.o permute_input.o log2n.o fft.o complex_magnitude.o complex16_array_magnitudes.o float16_sqrt.o convert_complex16_array_int16.o float16_to_int8.o mul_mag_colors.o display_color_array.o load_grb_val.o show.o enable_adc.o enable_timer0.o
+complex_demo.elf: interrupt_defs.o main.o float16_add.o float16_sub.o float16_mul.o float16_div.o int_to_float16.o complex_add.o complex_sub.o complex_mul.o reverse_bits.o permute_input.o log2n.o fft.o complex_magnitude.o complex16_array_magnitudes.o float16_sqrt.o convert_ints_complex16_array.o convert_complex16_array_int16.o float16_to_int8.o mul_mag_colors.o display_color_array.o load_grb_val.o show.o enable_adc.o enable_timer0.o init_ws2812.o
+	avr-ld -e init -o complex_demo.elf interrupt_defs.o main.o float16_add.o float16_sub.o float16_mul.o float16_div.o int_to_float16.o complex_add.o complex_sub.o complex_mul.o convert_ints_complex16_array.o reverse_bits.o permute_input.o log2n.o fft.o complex_magnitude.o complex16_array_magnitudes.o float16_sqrt.o convert_complex16_array_int16.o float16_to_int8.o mul_mag_colors.o display_color_array.o load_grb_val.o show.o enable_adc.o enable_timer0.o init_ws2812.o
 main.o: main.c
 	avr-gcc -W -c -mmcu=atmega328p -o main.o main.c
 float16_add.o: ./ops/float16_add.s
@@ -54,5 +54,7 @@ enable_adc.o: ./interrupt_vectors/enable_adc.s
 	avr-gcc -W -c -mmcu=atmega328p -o enable_adc.o ./interrupt_vectors/enable_adc.s
 enable_timer0.o: ./interrupt_vectors/enable_timer0.s
 	avr-gcc -W -c -mmcu=atmega328p -o enable_timer0.o ./interrupt_vectors/enable_timer0.s
+init_ws2812.o: ./ws2812/init_ws2812.s
+	avr-gcc -W -c -mmcu=atmega328p -o init_ws2812.o ./ws2812/init_ws2812.s
 clean:
 		\rm *.o complex_demo.hex complex_demo.elf

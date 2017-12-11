@@ -11,12 +11,12 @@ OUTPUT_BIT = 7
 .text
 show:
 ; Wait 6us
-  in  r21,  OUTPUT_PORT
-  andi r21, ~(1<<OUTPUT_BIT)  
-  out OUTPUT_PORT,  r21
-  ldi r21, 28
+  in  r16,  OUTPUT_PORT
+  andi r16, ~(1<<OUTPUT_BIT)
+  out OUTPUT_PORT,  r16
+  ldi r16, 28
 reset_loop:
-  dec r21
+  dec r16
   brne reset_loop
   nop
   nop

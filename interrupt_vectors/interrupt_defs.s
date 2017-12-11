@@ -38,6 +38,14 @@ out DDRB,  r16
 ldi r16,  0xFF
 out DDRD, r16
 
+ldi r25,  0
+ldi r24,  145
+call init_ws2812
+
+ldi r25,  0
+ldi r24,  145
+call init_ws2812
+
 call init_timer0
 call init_adc
 
@@ -50,7 +58,7 @@ init_timer0:
         ldi r16,  0 << WGM02 | 0 << CS02 | 1 << CS01 | 0 << CS00
         out TCCR0B, r16
 
-        ldi r16,  255
+        ldi r16,  49
         out OCR0A, r16
 
         ldi r16,  0 << OCIEB | 1 << OCIEA | 0 << TOIE
@@ -59,7 +67,7 @@ init_timer0:
         ret
 
 init_adc:
-        ldi r16,  1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE | 7 << ADPS0
+        ldi r16,  1 << ADEN | 1 << ADSC | 1 << ADATE | 1 << ADIF | 1 << ADIE | 5 << ADPS0
         sts ADCSRA, r16
 
         ldi r16,  3 << ADTS0

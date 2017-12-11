@@ -15,8 +15,7 @@ complex16 compose_complex(float16, float16);
 float16 convert_float_to_float16(void *);
 
 int main()
-{
-
+{ 
   uint8_t * PORTB = (uint8_t *)0x0025;
   uint8_t * PORTD = (uint8_t *)0x002B;
 
