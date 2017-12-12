@@ -1,0 +1,45 @@
+ID: BM
+File Size: 4068
+Reserved1: 0
+Reserved2: 0
+Pixel Array Offset: 118
+DIB Header Size: 40
+Width: 72
+Height: 108
+Planes: 1
+Bits Per Pixel: 4
+Compression: 2
+Image Size: 3950
+X Pixels per Meter: 2834
+Y Pixels per Meter: 2834
+Colors in Table: 0
+Important Color Count: 0
+Red Channel Bitmask: 0
+Green Channel Bitmask: 0
+Blue Channel Bitmask: 0
+Color Space Type: 0
+Color Space Endpoints: 0
+Gamma Red Channel: 0
+Gamma Green Channel: 0
+Gamma Blue Channel: 0
+Intent: 0
+ICC Profile Data Location: 0
+ICC Profile Size: 0
+Color Table Entries:
+	16777215
+	16776960
+	16711935
+	16711680
+	65535
+	65280
+	255
+	000
+	6579301
+	3750460
+	10447685
+	6832422
+	4465426
+	2036238
+	9737107
+	12895428
+

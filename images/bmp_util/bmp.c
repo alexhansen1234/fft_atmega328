@@ -15,10 +15,10 @@ struct BMP * getBMP(FILE *fp)
   fread((void *)&bmp->DIB_header_size, 4, 1, fp);
   fread((void *)&bmp->width, bmp->DIB_header_size - 4, 1, fp);
 
-  if(bmp->colors_in_table)
+  if(bmp->compression)
   {
-    bmp->color_table = (uint32_t *)calloc(sizeof(uint32_t) * bmp->colors_in_table, 1);
-    fread((void *)bmp->color_table, sizeof(uint32_t) * bmp->colors_in_table, 1, fp);
+    bmp->color_table = (uint32_t *)calloc(sizeof(uint8_t)*(bmp->pixel_array_offset - 54), 1);
+    fread((void *)bmp->color_table, sizeof(uint8_t) * (bmp->pixel_array_offset - 54), 1, fp);
   }
   else
   {
@@ -48,7 +48,7 @@ struct BMP * getBMP(FILE *fp)
 
 void print_BMP(struct BMP * bmp)
 {
-  printf("ID: %c%c\nFile Size: %u\nReserved1: %u\nReserved2: %u\nOffset: %u\n", *bmp->identifier, *(bmp->identifier+1), bmp->file_size, bmp->reserved1, bmp->reserved2, bmp->pixel_array_offset);
+  printf("ID: %c%c\nFile Size: %u\nReserved1: %u\nReserved2: %u\nPixel Array Offset: %u\n", *bmp->identifier, *(bmp->identifier+1), bmp->file_size, bmp->reserved1, bmp->reserved2, bmp->pixel_array_offset);
   printf("DIB Header Size: %u\n", bmp->DIB_header_size);
   printf("Width: %u\n", bmp->width);
   printf("Height: %u\n", bmp->height);
@@ -73,66 +73,72 @@ void print_BMP(struct BMP * bmp)
   printf("ICC Profile Size: %u\n", bmp->icc_profile_size);
   int i=0;
   int j=0;
-  while(i < bmp->colors_in_table)
+  if(bmp->compression)
   {
-    if(i==0) printf("Color Table Entries:\n");
-
-    printf("\t0x%08x\n", *(bmp->color_table + i));
-    i++;
-  }
-
-  i=0;
-  if(bmp->compression == 0)
-  {
-    while(i < bmp->image_size)
+    while(i < ((bmp->pixel_array_offset - 54)>>2))
     {
-      if(i==0) printf("Data Array:\n");
-      if(!(i % (bmp->width * (bmp->bits_per_pixel >> 3)))) printf("\n");
-      printf("%03u ", *(bmp->data + i));
+      if(i==0) printf("Color Table Entries:\n");
+      printf("\t%03u\n", *((bmp->color_table + i)));
       i++;
     }
   }
-  else if (bmp->compression == 1)
-  {
-    while(i < bmp->image_size)
-    {
-      if(i==0) printf("Data Array:\n");
 
-      if(*(bmp->data + i))
-      {
-        printf("%03u %03u ", *(bmp->data + i), *(bmp->data + i + 1));
-        i += 2;
-      }
-      else
-      {
-        switch(*(bmp->data + i + 1))
-        {
-          case 0: // End of Line
-          case 1: // End of File
-          case 2: // Delta
-                  printf("%03u %03u\n", *(bmp->data + i), *(bmp->data + i + 1));
-                  i += 2;
-                  break;
-          default:
-                  j = 0;
-                  printf("%03u ", *(bmp->data + i));
-                  while(j <= *(bmp->data + i + 1))
-                  {
-                    printf("%03u ", *(bmp->data + i + j + 1));
-                    j++;
-                  }
-                  if((j-1) % 2)
-                  {
-                    while((j-1) % 2)
-                    {
-                      printf("%03u ", *(bmp->data + i + j + 1));
-                      j++;
-                    }
-                  }
-                  i += j+1;
-        }
-      }
-    }
+  i=0;
+  switch(bmp->compression)
+  {
+    case 0: // Uncompressed
+            while(i < bmp->image_size)
+            {
+              if(i==0) printf("Data Array:\n");
+              if(!(i % (bmp->width * (bmp->bits_per_pixel >> 3)))) printf("\n");
+              printf("%03u ", *(bmp->data + i));
+              i++;
+            }
+            break;
+    case 1: // 8-bit RLE
+            while(i < bmp->image_size)
+            {
+              if(i==0) printf("Data Array:\n");
+
+              if(*(bmp->data + i))
+              {
+                printf("%03u %03u ", *(bmp->data + i), *(bmp->data + i + 1));
+                i += 2;
+              }
+              else
+              {
+                switch(*(bmp->data + i + 1))
+                {
+                  case 0: // End of Line
+                  case 1: // End of File
+                  case 2: // Delta
+                          printf("%03u %03u\n", *(bmp->data + i), *(bmp->data + i + 1));
+                          i += 2;
+                          break;
+                  default:
+                          j = 0;
+                          printf("%03u ", *(bmp->data + i));
+                          while(j <= *(bmp->data + i + 1))
+                          {
+                            printf("%03u ", *(bmp->data + i + j + 1));
+                            j++;
+                          }
+                          if((j-1) % 2)
+                          {
+                            while((j-1) % 2)
+                            {
+                              printf("%03u ", *(bmp->data + i + j + 1));
+                              j++;
+                            }
+                          }
+                          i += j+1;
+                }
+              }
+            }
+            break;
+    case 2: // 4-bit RLE
+
+            break;
   }
   printf("\n");
 }
@@ -145,4 +151,9 @@ void free_BMP(struct BMP * bmp)
     free(bmp->icc_color_profile_data);
   free(bmp->data);
   free(bmp);
+}
+
+void generate_image_header_atmega328p(struct BMP * bmp)
+{
+
 }
