@@ -78,7 +78,7 @@ void print_BMP(struct BMP * bmp)
     while(i < ((bmp->pixel_array_offset - 54)>>2))
     {
       if(i==0) printf("Color Table Entries:\n");
-      printf("\t%03u\n", *((bmp->color_table + i)));
+      printf("%d.\t%03u\n", i, *((bmp->color_table + i)));
       i++;
     }
   }
@@ -137,7 +137,45 @@ void print_BMP(struct BMP * bmp)
             }
             break;
     case 2: // 4-bit RLE
+            while(i < bmp->image_size)
+            {
+              if(i==0) printf("Data Array:\n");
 
+              if(*(bmp->data + i))
+              {
+                printf("%02x %02x ", *(bmp->data + i), *(bmp->data + i + 1));
+                i += 2;
+              }
+              else
+              {
+                switch(*(bmp->data + i + 1))
+                {
+                  case 0: // End of Line
+                  case 1: // End of File
+                  case 2: // Delta
+                          printf("%02x %02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                          i += 2;
+                          break;
+                  default:
+                          j = 0;
+                          printf("%02x ", *(bmp->data + i));
+                          while(j <= (*(bmp->data + i + 1)/2))
+                          {
+                            printf("%02x ", *(bmp->data + i + j + 1));
+                            j++;
+                          }
+                          if((j-1) % 2)
+                          {
+                            while((j-1) % 2)
+                            {
+                              printf("%02x ", *(bmp->data + i + j + 1));
+                              j++;
+                            }
+                          }
+                          i += j+1;
+                }
+              }
+            }
             break;
   }
   printf("\n");
@@ -153,7 +191,117 @@ void free_BMP(struct BMP * bmp)
   free(bmp);
 }
 
-void generate_image_header_atmega328p(struct BMP * bmp)
+void generate_image_header_atmega328p(struct BMP * bmp, const char * original_file_name)
 {
+  int size = 0;
+  int i=0, j=0;
+  int exit_loop = 0;
 
+
+  char string[] = "test";
+  char output_file_name[] = "test.s";
+  FILE * fp = fopen(output_file_name, "w");
+
+  switch(bmp->compression)
+  {
+    case 0:
+            printf("Uncompressed BMP file.\n");
+            printf("No Method for Generating Header.\n");
+            printf("Exiting.\n");
+            break;
+    case 1:
+            printf("Compression: 8-bit RLE BMP\n");
+            printf("No Method for Generating Header.\n");
+            printf("Exiting.");
+            break;
+    case 2:
+            // Run through once to get final size of array object
+            while(i < bmp->image_size && !exit_loop)
+            {
+                if(*(bmp->data + i))
+                {
+                  i += 2;
+                  size += 2;
+                }
+                else
+                {
+                  switch(*(bmp->data + i + 1))
+                  {
+                    case 0:
+                            i += 2;
+                            size += 2;
+                            break;
+                    case 1:
+                            size += 2;
+                            exit_loop = 1;
+                            break;
+                    case 2:
+                            printf("Error\n");
+                            return;
+                    default:
+                            j = 0;
+                            while(j <= (*(bmp->data + i + 1))>>1)
+                            {
+                              j++;
+                            }
+                            i += j + 1 + (*(bmp->data + i + 1) % 4)/2;
+                            size += j + 1;
+                  }
+                }
+            }
+
+            printf("Generating ATMEGA328P Image Header...\n");
+            printf("Input File: %s\n", original_file_name);
+            printf("Output File: %s\n", output_file_name);
+            printf("Compression: 4-bit RLE BMP\n");
+            printf("Padding Bytes Removed\n");
+            fprintf(fp, ".file \"%s_image.s\"\n", string);
+            fprintf(fp, ".global %s\n", string);
+            fprintf(fp, "\t.data\n");
+            fprintf(fp, "\t.type %s, @object\n", string);
+            fprintf(fp, "\t.size %s, %d\n", string, size);
+            fprintf(fp, "%s:\n", string);
+
+            i = 0;
+            j = 0;
+
+            while(i < bmp->image_size)
+            {
+                if(*(bmp->data + i))
+                {
+                  fprintf(fp, ".byte 0x%02x\n.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                  i += 2;
+                }
+                else
+                {
+                  switch(*(bmp->data + i + 1))
+                  {
+                    case 0:
+                            fprintf(fp, ".byte 0x%02x\n.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            i += 2;
+                            break;
+                    case 1:
+                            fprintf(fp, ".byte 0x%02x\n.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            return;
+                    case 2:
+                            printf("Error\n");
+                            return;
+                    default:
+                            j = 0;
+                            fprintf(fp, ".byte 0x%02x\n", *(bmp->data + i));
+                            while(j <= (*(bmp->data + i + 1))>>1)
+                            {
+                              fprintf(fp, ".byte 0x%02x\n", *(bmp->data + i + j + 1));
+                              j++;
+                            }
+                            i += j + 1 + (*(bmp->data + i + 1) % 4)/2;
+                  }
+                }
+            }
+            break;
+      default:
+                printf("Error\n");
+                return;
+  }
+  fclose(fp);
 }

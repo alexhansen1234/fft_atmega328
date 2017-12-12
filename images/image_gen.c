@@ -16,5 +16,6 @@ int main(int argc, char ** argv)
   fp = fopen(argv[1], "r");
   bmp = getBMP(fp);
   print_BMP(bmp);
+  generate_image_header_atmega328p(bmp, argv[1]);
   free_BMP(bmp);
 }
