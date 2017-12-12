@@ -7,12 +7,12 @@ __zero_reg__ = 1
 .global	array1
 	.data
 	.type	array1, @object
-	.size	array1, 4
+	.size	array1, 8
 array1:
-	.byte	1
-	.byte	2
-	.byte	3
-	.byte	4
+	.word	1
+	.word	2
+	.word	3
+	.word	4
 	.text
 .global	main
 	.type	main, @function

@@ -199,7 +199,7 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
 
 
   char string[] = "test";
-  char output_file_name[] = "test.s";
+  char output_file_name[] = "test_image.s";
   FILE * fp = fopen(output_file_name, "w");
 
   switch(bmp->compression)
@@ -255,7 +255,26 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
             printf("Output File: %s\n", output_file_name);
             printf("Compression: 4-bit RLE BMP\n");
             printf("Padding Bytes Removed\n");
+
+
             fprintf(fp, ".file \"%s_image.s\"\n", string);
+            /* PRINT COLOR TABLE */
+            fprintf(fp, ".global %s_color_table\n", string);
+            fprintf(fp, "\t.data\n");
+            fprintf(fp, "\t.type %s_color_table, @object\n", string);
+            fprintf(fp, "\t.size %s, %d\n", string, bmp->colors_in_table * 4);
+            fprintf(fp, "%s_color_table:\n", string);
+
+            i=0;
+
+            while(i < bmp->colors_in_table)
+            {
+              fprintf(fp, "\t.word 0x%04x\n\t.word 0x%04x\n", *(bmp->color_table+i) >> 16, *(bmp->color_table+i)&0xFFFF);
+              i++;
+            }
+            fprintf(fp, "\n");
+
+            /* PRINT INDEX DATA */
             fprintf(fp, ".global %s\n", string);
             fprintf(fp, "\t.data\n");
             fprintf(fp, "\t.type %s, @object\n", string);

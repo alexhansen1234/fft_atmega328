@@ -1,4 +1,26 @@
 .file "test_image.s"
+.global test_color_table
+	.data
+	.type test_color_table, @object
+	.size test, 32
+test_color_table:
+	.word 0x00ff
+	.word 0xffff
+	.word 0x00ff
+	.word 0xff00
+	.word 0x00ff
+	.word 0x00ff
+	.word 0x00ff
+	.word 0x0000
+	.word 0x0000
+	.word 0xffff
+	.word 0x0000
+	.word 0xff00
+	.word 0x0000
+	.word 0x00ff
+	.word 0x0000
+	.word 0x0000
+
 .global test
 	.data
 	.type test, @object
