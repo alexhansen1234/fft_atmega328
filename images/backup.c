@@ -101,7 +101,6 @@ void print_BMP(struct BMP * bmp)
       if(*(bmp->data + i))
       {
         printf("%03u %03u ", *(bmp->data + i), *(bmp->data + i + 1));
-        i += 2;
       }
       else
       {
@@ -115,21 +114,12 @@ void print_BMP(struct BMP * bmp)
                   break;
           default:
                   j = 0;
-                  printf("%03u ", *(bmp->data + i));
-                  while(j <= *(bmp->data + i + 1))
+                  while(j < *(bmp->data + i + 1))
                   {
                     printf("%03u ", *(bmp->data + i + j + 1));
                     j++;
                   }
-                  if((j-1) % 2)
-                  {
-                    while((j-1) % 2)
-                    {
-                      printf("%03u ", *(bmp->data + i + j + 1));
-                      j++;
-                    }
-                  }
-                  i += j+1;
+                  i += j;
         }
       }
     }
@@ -146,3 +136,4 @@ void free_BMP(struct BMP * bmp)
   free(bmp->data);
   free(bmp);
 }
+
