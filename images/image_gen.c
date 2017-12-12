@@ -16,4 +16,5 @@ int main(int argc, char ** argv)
   fp = fopen(argv[1], "r");
   bmp = getBMP(fp);
   print_BMP(bmp);
+  free_BMP(bmp);
 }

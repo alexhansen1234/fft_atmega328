@@ -42,4 +42,5 @@ struct BMP
 struct BMP * getBMP(FILE *);
 void free_BMP(struct BMP *);
 void print_BMP(struct BMP *);
+void generate_image_header_atmega328p(struct BMP *);
 #endif
