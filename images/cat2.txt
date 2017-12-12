@@ -146,6 +146,6 @@ Data Array:
 
 Generating ATMEGA328P Image Header...
 Input File: bmp_files/cat2.bmp
-Output File: test.s
+Output File: cat2_image.s
 Compression: 4-bit RLE BMP
 Padding Bytes Removed

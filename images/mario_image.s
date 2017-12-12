@@ -1,9 +1,9 @@
-.file "test_image.s"
-.global test_color_table
+.file "mario_image.s"
+.global mario_color_table
 	.data
-	.type test_color_table, @object
-	.size test, 32
-test_color_table:
+	.type mario_color_table, @object
+	.size mario, 32
+mario_color_table:
 	.word 0x00ff
 	.word 0xffff
 	.word 0x00ff
@@ -21,27 +21,27 @@ test_color_table:
 	.word 0x0000
 	.word 0x0000
 
-.global test_height
+.global mario_height
 	.data
-	.type test_height, @object
-	.size test_height, 4
-test_height:
+	.type mario_height, @object
+	.size mario_height, 4
+mario_height:
 	.word 0x0000
 	.word 0x0048
 
-.global test_width
+.global mario_width
 	.data
-	.type test_width, @object
-	.size test_width, 4
-test_width:
+	.type mario_width, @object
+	.size mario_width, 4
+mario_width:
 	.word 0x0000
 	.word 0x0048
 
-.global test
+.global mario
 	.data
-	.type test, @object
-	.size test, 1519
-test:
+	.type mario, @object
+	.size mario, 1524
+mario:
 	.byte 0x00
 	.byte 0x02
 	.byte 0x33

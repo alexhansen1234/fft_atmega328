@@ -5,7 +5,7 @@
 
 struct BMP * getBMP(FILE *fp)
 {
-  struct BMP *bmp = (struct BMP *)malloc(sizeof(struct BMP));
+  struct BMP *bmp = (struct BMP *)calloc(sizeof(struct BMP), 1);
 
   fread((void *)&bmp->identifier, 2, 1, fp);
   fread((void *)&bmp->file_size, 4, 1, fp);
@@ -196,10 +196,31 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
   int size = 0;
   int i=0, j=0;
   int exit_loop = 0;
+  char * file_name = (char *)malloc(sizeof(char));
 
+  while(*(original_file_name + i))
+  {
+    if(*(original_file_name + i) == '/')
+      j = i+1;
+    i++;
+  }
 
-  char string[] = "test";
-  char output_file_name[] = "test_image.s";
+  i = 0;
+
+  while(*(original_file_name + j) != '.')
+  {
+    size++;
+    file_name = (char *)realloc(file_name, sizeof(char) * (size + 1));
+    *(file_name + size - 1) = *(original_file_name + j);
+    j++;
+  }
+  *(file_name + j) = '\0';
+
+  char * string = file_name;
+  char * output_file_name = (char *)malloc(sizeof(char) * (strlen("_image.s") + strlen(string) + 1));
+  strcpy(output_file_name, string);
+  strcat(output_file_name, "_image.s");
+
   FILE * fp = fopen(output_file_name, "w");
 
   switch(bmp->compression)
@@ -236,8 +257,9 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
                             exit_loop = 1;
                             break;
                     case 2:
-                            printf("Error\n");
-                            return;
+                            i += 2;
+                            size += 2;
+                            break;
                     default:
                             j = 0;
                             while(j <= (*(bmp->data + i + 1))>>1)
@@ -274,6 +296,26 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
             }
             fprintf(fp, "\n");
 
+            /* PRINT HEIGHT */
+            fprintf(fp, ".global %s_height\n", string);
+            fprintf(fp, "\t.data\n");
+            fprintf(fp, "\t.type %s_height, @object\n", string);
+            fprintf(fp, "\t.size %s_height, %lu\n", string, sizeof(bmp->height));
+            fprintf(fp, "%s_height:\n", string);
+            fprintf(fp, "\t.word 0x%04x\n", (bmp->height>>16)&0xFFFF);
+            fprintf(fp, "\t.word 0x%04x\n", (bmp->height)&0xFFFF);
+            fprintf(fp, "\n");
+
+            /* PRINT WIDTH */
+            fprintf(fp, ".global %s_width\n", string);
+            fprintf(fp, "\t.data\n");
+            fprintf(fp, "\t.type %s_width, @object\n", string);
+            fprintf(fp, "\t.size %s_width, %lu\n", string, sizeof(bmp->width));
+            fprintf(fp, "%s_width:\n", string);
+            fprintf(fp, "\t.word 0x%04x\n", (bmp->width>>16)&0xFFFF);
+            fprintf(fp, "\t.word 0x%04x\n", (bmp->width)&0xFFFF);
+            fprintf(fp, "\n");
+
             /* PRINT INDEX DATA */
             fprintf(fp, ".global %s\n", string);
             fprintf(fp, "\t.data\n");
@@ -283,12 +325,13 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
 
             i = 0;
             j = 0;
+            exit_loop = 0;
 
-            while(i < bmp->image_size)
+            while(i < bmp->image_size && !exit_loop)
             {
                 if(*(bmp->data + i))
                 {
-                  fprintf(fp, ".byte 0x%02x\n.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                  fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
                   i += 2;
                 }
                 else
@@ -296,21 +339,23 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
                   switch(*(bmp->data + i + 1))
                   {
                     case 0:
-                            fprintf(fp, ".byte 0x%02x\n.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
                             i += 2;
                             break;
                     case 1:
-                            fprintf(fp, ".byte 0x%02x\n.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
-                            return;
+                            fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            exit_loop = 1;
+                            break;
                     case 2:
-                            printf("Error\n");
-                            return;
+                            fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            i += 2;
+                            break;
                     default:
                             j = 0;
-                            fprintf(fp, ".byte 0x%02x\n", *(bmp->data + i));
+                            fprintf(fp, "\t.byte 0x%02x\n", *(bmp->data + i));
                             while(j <= (*(bmp->data + i + 1))>>1)
                             {
-                              fprintf(fp, ".byte 0x%02x\n", *(bmp->data + i + j + 1));
+                              fprintf(fp, "\t.byte 0x%02x\n", *(bmp->data + i + j + 1));
                               j++;
                             }
                             i += j + 1 + (*(bmp->data + i + 1) % 4)/2;
@@ -322,5 +367,7 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
                 printf("Error\n");
                 return;
   }
+  free(file_name);
+  free(output_file_name);
   fclose(fp);
 }
