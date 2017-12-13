@@ -1,6 +1,6 @@
 .file "test_image.s"
 .global test_color_table
-	.data
+	.text
 	.type test_color_table, @object
 	.size test, 32
 test_color_table:

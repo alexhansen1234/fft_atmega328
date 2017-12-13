@@ -1,6 +1,6 @@
 .file "mario_image.s"
 .global mario_color_table
-	.data
+	.text
 	.type mario_color_table, @object
 	.size mario, 32
 mario_color_table:
@@ -22,7 +22,7 @@ mario_color_table:
 	.word 0x0000
 
 .global mario_height
-	.data
+	.text
 	.type mario_height, @object
 	.size mario_height, 4
 mario_height:
@@ -30,18 +30,18 @@ mario_height:
 	.word 0x0048
 
 .global mario_width
-	.data
+	.text
 	.type mario_width, @object
 	.size mario_width, 4
 mario_width:
 	.word 0x0000
 	.word 0x0048
 
-.global mario
-	.data
-	.type mario, @object
-	.size mario, 1524
-mario:
+.global mario_data
+	.text
+	.type mario_data, @object
+	.size mario_data, 1520
+mario_data:
 	.byte 0x00
 	.byte 0x02
 	.byte 0x33
@@ -1561,3 +1561,4 @@ mario:
 	.byte 0x03
 	.byte 0x00
 	.byte 0x01
+	.byte 0x00
