@@ -343,13 +343,14 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
 
             i = 0;
             j = 0;
+            uint32_t line_counter = 0;
             exit_loop = 0;
 
             while(i < bmp->image_size && !exit_loop)
             {
                 if(*(bmp->data + i))
                 {
-                  fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                  fprintf(fp, "\t.byte 0x%02x /* %x */\n\t.byte 0x%02x /* %x */\n", *(bmp->data + i), line_counter++, *(bmp->data + i + 1), line_counter++);
                   i += 2;
                 }
                 else
@@ -357,11 +358,11 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
                   switch(*(bmp->data + i + 1))
                   {
                     case 0:
-                            fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            fprintf(fp, "\t.byte 0x%02x /* %x */\n\t.byte 0x%02x /* %x */\n", *(bmp->data + i), line_counter++, *(bmp->data + i + 1), line_counter++);
                             i += 2;
                             break;
                     case 1:
-                            fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            fprintf(fp, "\t.byte 0x%02x /* %x */\n\t.byte 0x%02x /* %x */\n", *(bmp->data + i), line_counter++, *(bmp->data + i + 1), line_counter++);
                             if(padding_byte)
                             {
                               fprintf(fp, "\t.byte 0x00\n");
@@ -370,15 +371,15 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
                             exit_loop = 1;
                             break;
                     case 2:
-                            fprintf(fp, "\t.byte 0x%02x\n\t.byte 0x%02x\n", *(bmp->data + i), *(bmp->data + i + 1));
+                            fprintf(fp, "\t.byte 0x%02x /* %x */\n\t.byte 0x%02x /* %x */\n", *(bmp->data + i), line_counter++, *(bmp->data + i + 1), line_counter++);
                             i += 2;
                             break;
                     default:
                             j = 0;
-                            fprintf(fp, "\t.byte 0x%02x\n", *(bmp->data + i));
+                            fprintf(fp, "\t.byte 0x%02x /* %x */\n", *(bmp->data + i), line_counter++);
                             while(j <= (*(bmp->data + i + 1))>>1)
                             {
-                              fprintf(fp, "\t.byte 0x%02x\n", *(bmp->data + i + j + 1));
+                              fprintf(fp, "\t.byte 0x%02x /* %x */\n", *(bmp->data + i + j + 1), line_counter++);
                               j++;
                             }
                             i += j + 1 + (*(bmp->data + i + 1) % 4)/2;
