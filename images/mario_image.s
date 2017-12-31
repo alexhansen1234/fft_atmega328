@@ -1,8 +1,16 @@
 .file "mario_image.s"
+
+.global mario_data_size
+	.text
+	.type mario_data_size, @object
+	.size mario_data_size, 2
+mario_data_size:
+	.word mario_data_end - mario_data
+
 .global mario_color_table
 	.text
 	.type mario_color_table, @object
-	.size mario, 32
+	.size mario_color_table, 32
 mario_color_table:
 	.word 0xffff
 	.word 0x00ff
@@ -1562,3 +1570,4 @@ mario_data:
 	.byte 0x00
 	.byte 0x01
 	.byte 0x00
+mario_data_end:

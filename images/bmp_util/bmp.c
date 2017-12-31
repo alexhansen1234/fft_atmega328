@@ -285,8 +285,19 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
             printf("Compression: 4-bit RLE BMP\n");
             printf("Padding Bytes Removed\n");
 
-
+            /* PRINT FILE NAME */
             fprintf(fp, ".file \"%s_image.s\"\n", string);
+            fprintf(fp, "\n");
+
+            /* PRINT SIZE */
+            fprintf(fp, ".global %s_data_size\n", string);
+            fprintf(fp, "\t.text\n");
+            fprintf(fp, "\t.type %s_data_size, @object\n", string);
+            fprintf(fp, "\t.size %s_data_size, 2\n", string);
+            fprintf(fp, "%s_data_size:\n", string);
+            fprintf(fp, "\t.word %s_data_end - %s_data\n", string, string);
+            fprintf(fp, "\n");
+
             /* PRINT COLOR TABLE */
             fprintf(fp, ".global %s_color_table\n", string);
             fprintf(fp, "\t.text\n");
@@ -355,6 +366,7 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
                             {
                               fprintf(fp, "\t.byte 0x00\n");
                             }
+                            fprintf(fp, "%s_data_end:\n", string);
                             exit_loop = 1;
                             break;
                     case 2:
