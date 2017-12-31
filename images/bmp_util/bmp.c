@@ -291,14 +291,14 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
             fprintf(fp, ".global %s_color_table\n", string);
             fprintf(fp, "\t.text\n");
             fprintf(fp, "\t.type %s_color_table, @object\n", string);
-            fprintf(fp, "\t.size %s, %d\n", string, bmp->colors_in_table * 4);
+            fprintf(fp, "\t.size %s_color_table, %d\n", string, bmp->colors_in_table * 4);
             fprintf(fp, "%s_color_table:\n", string);
 
             i=0;
 
             while(i < bmp->colors_in_table)
             {
-              fprintf(fp, "\t.word 0x%04x\n\t.word 0x%04x\n", *(bmp->color_table+i) >> 16, *(bmp->color_table+i)&0xFFFF);
+              fprintf(fp, "\t.word 0x%04x\n\t.word 0x%04x\n", *(bmp->color_table+i)&0xFFFF, *(bmp->color_table+i) >> 16);
               i++;
             }
             fprintf(fp, "\n");
@@ -309,8 +309,8 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
             fprintf(fp, "\t.type %s_height, @object\n", string);
             fprintf(fp, "\t.size %s_height, %lu\n", string, sizeof(bmp->height));
             fprintf(fp, "%s_height:\n", string);
-            fprintf(fp, "\t.word 0x%04x\n", (bmp->height>>16)&0xFFFF);
             fprintf(fp, "\t.word 0x%04x\n", (bmp->height)&0xFFFF);
+            fprintf(fp, "\t.word 0x%04x\n", (bmp->height>>16)&0xFFFF);
             fprintf(fp, "\n");
 
             /* PRINT WIDTH */
@@ -319,8 +319,8 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
             fprintf(fp, "\t.type %s_width, @object\n", string);
             fprintf(fp, "\t.size %s_width, %lu\n", string, sizeof(bmp->width));
             fprintf(fp, "%s_width:\n", string);
-            fprintf(fp, "\t.word 0x%04x\n", (bmp->width>>16)&0xFFFF);
             fprintf(fp, "\t.word 0x%04x\n", (bmp->width)&0xFFFF);
+            fprintf(fp, "\t.word 0x%04x\n", (bmp->width>>16)&0xFFFF);
             fprintf(fp, "\n");
 
             /* PRINT INDEX DATA */

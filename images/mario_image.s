@@ -4,7 +4,6 @@
 	.type mario_color_table, @object
 	.size mario, 32
 mario_color_table:
-	.word 0x00ff
 	.word 0xffff
 	.word 0x00ff
 	.word 0xff00
@@ -12,12 +11,13 @@ mario_color_table:
 	.word 0x00ff
 	.word 0x00ff
 	.word 0x0000
-	.word 0x0000
+	.word 0x00ff
 	.word 0xffff
 	.word 0x0000
 	.word 0xff00
 	.word 0x0000
 	.word 0x00ff
+	.word 0x0000
 	.word 0x0000
 	.word 0x0000
 
@@ -26,16 +26,16 @@ mario_color_table:
 	.type mario_height, @object
 	.size mario_height, 4
 mario_height:
-	.word 0x0000
 	.word 0x0048
+	.word 0x0000
 
 .global mario_width
 	.text
 	.type mario_width, @object
 	.size mario_width, 4
 mario_width:
-	.word 0x0000
 	.word 0x0048
+	.word 0x0000
 
 .global mario_data
 	.text
