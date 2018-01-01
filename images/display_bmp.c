@@ -61,6 +61,7 @@ void display_bmp(struct BMP_HEADER * bmp_header)
   uint16_t  current_height = 0;
   uint16_t  delta_width;
   uint16_t  delta_height;
+  uint32_t  delta_color = lpm_u32(bmp_header->color_table);
   uint8_t   run_length;
 
   while(current_data_offset < bmp_header->size)
@@ -104,20 +105,17 @@ void display_bmp(struct BMP_HEADER * bmp_header)
                 current_data_offset += 2;
                 break;
         case 1: /* End of File */
-                /* if(current_height != bmp->height && current_width != bmp->width) */
-                /* */
-                /*    while(current_height < bmp->height && current_width < bmp->width) */
-                /*    { */
-                /*      load_grb_val(lpm_u32(bmp_header->color_table)); */
-                /*      if(current_width == bmp->width) */
-                /*      { */
-                /*        show(); */
-                /*        current_width = 0;  */
-                /*        current_height += 1;  */
-                /*      } */
-                /*      current_width += 1; */
-                /*    } */
-                /* }  */
+                while(current_height < bmp_header->height && current_width < bmp_header->width)
+                {
+                  load_rgb_val(delta_color);
+                  if(current_width == bmp_header->width)
+                  {
+                    show();
+                    current_width = 0;
+                    current_height += 1;
+                  }
+                  current_width += 1;
+                }
                 return;
         case 2: /* Delta */
                 delta_width = current_width + lpm_u8(bmp_header->data + current_data_offset + 2);
@@ -129,7 +127,7 @@ void display_bmp(struct BMP_HEADER * bmp_header)
                 }
                 while(current_width != delta_width && current_height != delta_height)
                 {
-                  load_rgb_val(lpm_u32(bmp_header->color_table));
+                  load_rgb_val(delta_color);
                   current_width += 1;
                   if(current_width == bmp_header->width)
                   {
@@ -141,10 +139,17 @@ void display_bmp(struct BMP_HEADER * bmp_header)
                 current_data_offset += 4;
                 break;
         default:
+                run_length = 0;
+                while(current_data - run_length)
+                {
+                  load_rgb_val(lpm_u8(bmp_header->data + run_length));
+                  load_rgb_val(lpm_u8(bmp_header->data + run_length + 1));
+                  run_length++;
+                }
                 current_data_offset += 2 + (current_data>>1);
                 break;
+
+        }
       }
     }
-  }
-  return;
 }
