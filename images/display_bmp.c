@@ -130,6 +130,7 @@ void display_bmp(struct BMP_HEADER * bmp_header)
                 while(current_width != delta_width && current_height != delta_height)
                 {
                   load_rgb_val(lpm_u32(bmp_header->color_table));
+                  current_width += 1;
                   if(current_width == bmp_header->width)
                   {
                     show();

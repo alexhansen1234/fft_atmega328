@@ -1,3 +1,6 @@
+.global init
+.text
+init:
 ldi r16,  0x07
 out 0x3e, r16
 ldi r16,  0xF7
