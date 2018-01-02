@@ -1,5 +1,3 @@
-/* .include "./interrupt_vectors/memory_map.s" */
-
 SPL = 0x3d
 SPH = 0x3e
 SREG = 0x3f
@@ -8,10 +6,10 @@ _zero_reg_ = 0x01
 OUTPUT_PORT = 0x0B
 OUTPUT_BIT = 7
 
-/* extern void load_grb_val (uint8_t green[r25], uint8_t red[r24], uint8_t blue[r23]); */
-.global load_grb_val
+/* extern void load_rgb_val (uint32_t color) */
+.global load_rgb_val
 .text
-load_grb_val:
+load_rgb_val:
 
   ldi   r20, 0x08
 byte1:
@@ -39,7 +37,7 @@ byte2:
 
   ldi r20,  0x08
 byte3:
-  lsl   r25
+  lsl   r22
   brbs  0,  byte3_bit_high
   call  T0
   rjmp  byte3_bit_low
