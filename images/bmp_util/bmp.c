@@ -298,6 +298,16 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
             fprintf(fp, "\t.word %s_data_end - %s_data\n", string, string);
             fprintf(fp, "\n");
 
+            /* PRINT COLOR TABLE SIZE */
+            fprintf(fp, ".global %s_color_table_size\n", string);
+            fprintf(fp, "\t.text\n");
+            fprintf(fp, "\t.type %s_color_table_size, @object\n", string);
+            fprintf(fp, "\t.size %s_color_table_size, 2\n", string);
+            fprintf(fp, "%s_color_table_size:\n", string);
+            fprintf(fp, "\t.word %s_color_table_end - %s_color_table\n", string, string);
+            fprintf(fp, "\n");
+
+
             /* PRINT COLOR TABLE */
             fprintf(fp, ".global %s_color_table\n", string);
             fprintf(fp, "\t.text\n");
@@ -312,6 +322,7 @@ void generate_image_header_atmega328p(struct BMP * bmp, const char * original_fi
               fprintf(fp, "\t.word 0x%04x\n\t.word 0x%04x\n", *(bmp->color_table+i)&0xFFFF, *(bmp->color_table+i) >> 16);
               i++;
             }
+            fprintf(fp, "%s_color_table_end:\n", string);
             fprintf(fp, "\n");
 
             /* PRINT HEIGHT */

@@ -7,6 +7,13 @@
 test_data_size:
 	.word test_data_end - test_data
 
+.global test_color_table_size
+	.text
+	.type test_color_table_size, @object
+	.size test_color_table_size, 2
+test_color_table_size:
+	.word test_color_table_end - test_color_table
+
 .global test_color_table
 	.text
 	.type test_color_table, @object
@@ -30,6 +37,7 @@ test_color_table:
 	.word 0x0000
 	.word 0xffff
 	.word 0x00ff
+test_color_table_end:
 
 .global test_height
 	.text

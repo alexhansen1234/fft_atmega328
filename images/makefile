@@ -5,7 +5,7 @@ bmp_demo.elf: reset.o display_bmp.o lpm_u32.o lpm_u16.o lpm_u8.o test_image.o sh
 reset.o: reset.s
 	avr-gcc -Wall -pedantic-errors -c -mmcu=atmega328 -o reset.o reset.s
 display_bmp.o: display_bmp.c progmem/progmem.h program_address.o
-	avr-gcc -Wall -pedantic-errors -c -mmcu=atmega328 -O2 -o display_bmp.o display_bmp.c
+	avr-gcc -Wall -std=c99 -pedantic-errors -O3 -c -mmcu=atmega328 -o display_bmp.o display_bmp.c
 lpm_u32.o: ./progmem/lpm_u32.s
 	avr-gcc -Wall -c -mmcu=atmega328 -o lpm_u32.o ./progmem/lpm_u32.s
 lpm_u16.o: ./progmem/lpm_u16.s
