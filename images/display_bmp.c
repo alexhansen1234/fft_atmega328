@@ -32,6 +32,7 @@ extern uint32_t   test_width;
 extern uint32_t * test_color_table;
 extern uint8_t  * test_data;
 
+extern void init(void);
 extern void load_rgb_val(uint32_t color);
 extern void show(void);
 
@@ -189,5 +190,5 @@ void display_bmp(struct ws2812 * strip, struct BMP_HEADER * bmp_header)
 
         }
       }
-    }
+  }
 }
