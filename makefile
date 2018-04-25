@@ -58,3 +58,9 @@ init_ws2812.o: ./ws2812/init_ws2812.s
 	avr-gcc -W -c -mmcu=atmega328p -o init_ws2812.o ./ws2812/init_ws2812.s
 clean:
 		\rm *.o complex_demo.hex complex_demo.elf
+
+push: 
+	make clean
+	git add .
+	git commit -m "update"
+	git push origin master

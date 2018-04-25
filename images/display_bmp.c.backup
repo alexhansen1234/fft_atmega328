@@ -1,9 +1,20 @@
 #include <stdint.h>
 #include "progmem/progmem.h"
-#include "apa102/apa102.h"
 
 #define NUM_PIXELS 144
 
+struct ws2812
+{
+  uint16_t    num_pixels;
+  uint32_t  * pixels;
+};
+/*
+struct apa102
+{
+  uint16_t    num_pixels;
+  uint32_t  * pixels;
+};
+*/
 struct BMP_HEADER
 {
   uint16_t    size;
@@ -27,23 +38,35 @@ extern uint32_t   test_width;
 extern uint32_t * test_color_table;
 extern uint8_t  * test_data;
 
-void display_bmp(struct apa102 *, struct BMP_HEADER *);
+extern void init(void);
+extern void load_rgb_val(uint32_t color);
+extern void show(void);
+
+void show_pixels(uint32_t * array, uint16_t num_pixels)
+{
+  uint16_t counter=0;
+  while(counter < num_pixels)
+  {
+    load_rgb_val(array[counter++]);
+  }
+  show();
+}
+
+void display_bmp(struct ws2812 *, struct BMP_HEADER *);
 
 int main()
 {
     uint32_t pixels[NUM_PIXELS];
-    //struct ws2812 strip;
+    struct ws2812 strip;
+    //struct apa102 strip102;
     struct BMP_HEADER test;
     /*struct BMP_HEADER mario;*/
 
-    //strip.num_pixels = NUM_PIXELS;
-    //strip.pixels = pixels;
+    strip.num_pixels = NUM_PIXELS;
+    strip.pixels = pixels;
 
-    struct apa102 strip102;
-
-    strip102.num_pixels = NUM_PIXELS;
-    strip102.pixels = pixels;
-    strip102.brightness = 2;
+    //strip102.num_pixels = NUM_PIXELS;
+    //strip102.pixels = pixels;
 
     test.size         = lpm_u16(&test_data_size);
     test.color_table_n_elem = lpm_u16(&test_color_table_size) >> 2;
@@ -62,13 +85,13 @@ int main()
 
     while(1)
     {
-      display_bmp(&strip102, &test);
+      display_bmp(&strip, &test);
         /*display_bmp(&strip, &mario);*/
     }
 
 }
 
-void display_bmp(struct apa102 * strip, struct BMP_HEADER * bmp_header)
+void display_bmp(struct ws2812 * strip, struct BMP_HEADER * bmp_header)
 {
   uint32_t  color_table[bmp_header->color_table_n_elem];
   uint32_t  current_data_offset = 0;
@@ -121,7 +144,7 @@ void display_bmp(struct apa102 * strip, struct BMP_HEADER * bmp_header)
       {
         case 0: /* End of Line */
                 /* If line ends before the width of image, fill in with first entry in color table */
-                show(strip);
+                show_pixels(strip->pixels, bmp_header->width);
                 current_height += 1;
                 current_width = 0;
                 current_data_offset += 2;
@@ -132,7 +155,7 @@ void display_bmp(struct apa102 * strip, struct BMP_HEADER * bmp_header)
                   strip->pixels[current_width] = color_table[0];
                   if(current_width == bmp_header->width)
                   {
-                    show(strip);
+                    show_pixels(strip->pixels, bmp_header->width);
                     current_width = 0;
                     current_height += 1;
                   }
@@ -153,7 +176,7 @@ void display_bmp(struct apa102 * strip, struct BMP_HEADER * bmp_header)
                   current_width += 1;
                   if(current_width == bmp_header->width)
                   {
-                    show(strip);
+                    show_pixels(strip->pixels, bmp_header->width);
                     current_width = 0;
                     current_height += 1;
                   }

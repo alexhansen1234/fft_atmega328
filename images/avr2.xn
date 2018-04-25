@@ -1,3 +1,5 @@
+/* Modified by Alex - Originally, did not allow */
+/* programs larger than 8k */
 /* Script for -n: mix text and data on same page */
 OUTPUT_FORMAT("elf32-avr","elf32-avr","elf32-avr")
 OUTPUT_ARCH(avr:2)
