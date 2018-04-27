@@ -19,22 +19,23 @@ INTERRUPT_DEFS := interrupt_vectors/interrupt_defs.o
 
 $(BINARY): $(ELF)
 	@echo Obj-Copy $(ELF) to $(BINARY)
-	$(OBJ_COPY) $(OBJ_COPY_FLAGS) $(ELF) $(BINARY)
+	@$(OBJ_COPY) $(OBJ_COPY_FLAGS) $(ELF) $(BINARY)
 
 $(ELF): $(ASM_OBJ) $(C_OBJ)
-	@echo Linking $(ASM_OBJ) $(C_OBJ)
-	$(LD) $(LD_FLAGS) -o $(ELF) $(INTERRUPT_DEFS) $(ASM_OBJ) $(C_OBJ)
+	@echo Linking Objects
+	@$(LD) $(LD_FLAGS) -o $(ELF) $(INTERRUPT_DEFS) $(ASM_OBJ) $(C_OBJ)
 
 .s.o:
 	@echo Assembling $<
-	$(CC) $(CC_FLAGS) -o $@ $<
+	@$(CC) $(CC_FLAGS) -o $@ $<
 
 .c.o:
 	@echo Compiling $<
-	$(CC) $(CC_FLAGS) -o $@ $<
+	@$(CC) $(CC_FLAGS) -o $@ $<
 
 clean:
-	rm -f $(BINARY) $(ELF) $(ASM_OBJ) $(C_OBJ)
+	@echo Cleaning Build
+	@rm -f $(BINARY) $(ELF) $(ASM_OBJ) $(C_OBJ)
 
 push:
 	make clean
