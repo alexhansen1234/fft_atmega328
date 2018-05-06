@@ -12,8 +12,8 @@ OBJ_COPY_FLAGS := -O ihex
 
 C_OBJ := $(patsubst %.c, %.o, $(wildcard *.c))
 ASM_OBJ := $(patsubst %.s, %.o, $(wildcard */*.s))
-C_SRC := $(wildcard */*.s)
-ASM_SRC := $(wildcard */*.c)
+C_SRC := $(wildcard */.c)
+ASM_SRC := $(wildcard */*.s)
 
 INTERRUPT_DEFS := interrupt_vectors/interrupt_defs.o
 
